@@ -1,0 +1,26 @@
+# Secrets and environment variables
+.env
+.env.local
+.env.*.local
+*.secret
+
+# Build artifacts
+build/
+dist/
+.expo/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# OpenCode (runtime data, not config)
+.opencode/sessions/
+.opencode/history/

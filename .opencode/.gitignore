@@ -1,0 +1,14 @@
+# Exclude node_modules (will be reinstalled by package manager)
+node_modules/
+
+# Lock file (regenerate on install)
+bun.lock
+bun.lockb
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
