@@ -29,17 +29,17 @@
       "prompt_append": "Focus on architectural patterns, system design, and long-horizon reasoning. Consider scalability and maintainability.",
     },
 
-    // Research agent: Fast exploration
+    // Research agent: Lightweight triage/exploration
     "librarian": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "local-llm/nemotron-nano-4b",
       "temperature": 0.6,
       "top_p": 0.95,
       "stream": false,
     },
 
-    // Exploration/investigation: Fast model
+    // Exploration/investigation: Lightweight model
     "explore": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "local-llm/nemotron-nano-4b",
       "temperature": 0.6,
       "top_p": 0.95,
       "stream": false,
@@ -116,9 +116,9 @@
   // CATEGORIES - Task classification with model assignment
   // ============================================================================
   "categories": {
-    // Trivial tasks - use fast agent
+    // Trivial tasks - offloaded to nano model
     "quick": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "local-llm/nemotron-nano-4b",
       "description": "Quick fixes, minor edits, simple refactoring",
     },
 
@@ -134,15 +134,15 @@
       "description": "Complex refactoring, architecture decisions, multi-file changes",
     },
 
-    // Documentation and prose - fast agent
+    // Documentation and prose - offloaded to nano model
     "writing": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "local-llm/nemotron-nano-4b",
       "description": "Documentation, comments, and prose writing",
     },
 
-    // Git operations - fast and reliable
+    // Git operations - offloaded to nano model
     "git": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "local-llm/nemotron-nano-4b",
       "description": "Git operations, commit messages, branch management",
     },
 
@@ -164,7 +164,7 @@
       "description": "Code review, quality analysis, best practices",
     },
 
-    // Visual/UI work - critical category for frontend tasks
+    // Visual/UI work - fast agent (needs coding ability)
     "visual-engineering": {
       "model": "local-llm/qwen35-moe-35b",
       "description": "Frontend, UI/UX, design, styling, animation",
@@ -210,6 +210,18 @@
             "output": 32768,
           },
         },
+        // Nemotron-3-Nano-4B: Lightweight triage layer (git, writing, quick, explore)
+        "nemotron-nano-4b": {
+          "name": "nemotron-nano-4b",
+          "cost": {
+            "input": 0,
+            "output": 0,
+          },
+          "limit": {
+            "context": 65536,
+            "output": 16384,
+          },
+        },
       },
     },
   },
@@ -219,11 +231,14 @@
   // ============================================================================
   "background_task": {
     "providerConcurrency": {
-      "local-llm": 4,
+      // +2 to account for nemotron-nano-4b parallel slots
+      "local-llm": 6,
     },
     "modelConcurrency": {
       "local-llm/qwen35-moe-35b": 2,
       "local-llm/qwen3-coder-next": 1,
+      // 4B model: run up to 4 concurrent trivial tasks
+      "local-llm/nemotron-nano-4b": 4,
     },
   },
 
