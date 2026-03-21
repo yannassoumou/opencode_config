@@ -15,23 +15,23 @@
       "top_p": 0.95,
       "maxTokens": 32768,
       "stream": false,
-      "fallback_models": ["local-llm/qwen3-coder-next"],
+      "fallback_models": ["wsl-llm/nemotron-nano-4b"],
     },
 
     // Architecture consultation: Deep reasoning agent
     "oracle": {
-      "model": "local-llm/qwen3-coder-next",
+      "model": "local-llm/qwen35-moe-35b",
       "temperature": 1.0,
       "top_p": 0.95,
       "maxTokens": 32768,
       "stream": false,
-      "fallback_models": ["local-llm/qwen35-moe-35b"],
+      "fallback_models": ["wsl-llm/nemotron-nano-4b"],
       "prompt_append": "Focus on architectural patterns, system design, and long-horizon reasoning. Consider scalability and maintainability.",
     },
 
     // Research agent: Lightweight triage/exploration
     "librarian": {
-      "model": "local-llm/nemotron-nano-4b",
+      "model": "wsl-llm/nemotron-nano-4b",
       "temperature": 0.6,
       "top_p": 0.95,
       "stream": false,
@@ -39,7 +39,7 @@
 
     // Exploration/investigation: Lightweight model
     "explore": {
-      "model": "local-llm/nemotron-nano-4b",
+      "model": "wsl-llm/nemotron-nano-4b",
       "temperature": 0.6,
       "top_p": 0.95,
       "stream": false,
@@ -47,10 +47,10 @@
 
     // Metaprogramming tasks: Deep reasoning
     "metis": {
-      "model": "local-llm/qwen3-coder-next",
+      "model": "local-llm/qwen35-moe-35b",
       "temperature": 1.0,
       "stream": false,
-      "fallback_models": ["local-llm/qwen35-moe-35b"],
+      "fallback_models": ["wsl-llm/nemotron-nano-4b"],
       "prompt_append": "Provide careful analysis of code patterns, potential optimizations, and edge cases.",
     },
 
@@ -68,7 +68,7 @@
       "temperature": 0.6,
       "prompt_append": "Prioritize leveraging deep agents (oracle, metis) in parallel for complex analysis.",
       "stream": false,
-      "fallback_models": ["local-llm/qwen3-coder-next"],
+      "fallback_models": ["wsl-llm/nemotron-nano-4b"],
     },
 
     // Sisyphus-Junior: The actual subagent executor for category delegation
@@ -93,7 +93,7 @@
 
     // Plan agent: For work plan generation
     "plan": {
-      "model": "local-llm/qwen3-coder-next",
+      "model": "local-llm/qwen35-moe-35b",
       "temperature": 1.0,
       "top_p": 0.95,
       "maxTokens": 32768,
@@ -118,7 +118,7 @@
   "categories": {
     // Trivial tasks - offloaded to nano model
     "quick": {
-      "model": "local-llm/nemotron-nano-4b",
+      "model": "wsl-llm/nemotron-nano-4b",
       "description": "Quick fixes, minor edits, simple refactoring",
     },
 
@@ -130,37 +130,37 @@
 
     // High complexity - deep reasoning agent
     "unspecified-high": {
-      "model": "local-llm/qwen3-coder-next",
+      "model": "local-llm/qwen35-moe-35b",
       "description": "Complex refactoring, architecture decisions, multi-file changes",
     },
 
     // Documentation and prose - offloaded to nano model
     "writing": {
-      "model": "local-llm/nemotron-nano-4b",
+      "model": "wsl-llm/nemotron-nano-4b",
       "description": "Documentation, comments, and prose writing",
     },
 
     // Git operations - offloaded to nano model
     "git": {
-      "model": "local-llm/nemotron-nano-4b",
+      "model": "wsl-llm/nemotron-nano-4b",
       "description": "Git operations, commit messages, branch management",
     },
 
     // Debugging - deep reasoning
     "debugging": {
-      "model": "local-llm/qwen3-coder-next",
+      "model": "local-llm/qwen35-moe-35b",
       "description": "Bug investigation, error analysis, root cause analysis",
     },
 
     // Performance optimization - deep reasoning
     "optimization": {
-      "model": "local-llm/qwen3-coder-next",
+      "model": "local-llm/qwen35-moe-35b",
       "description": "Performance analysis, bottleneck identification, optimization strategies",
     },
 
     // Code review - deep reasoning
     "code-review": {
-      "model": "local-llm/qwen3-coder-next",
+      "model": "local-llm/qwen35-moe-35b",
       "description": "Code review, quality analysis, best practices",
     },
 
@@ -195,7 +195,7 @@
             "output": 0,
           },
           "limit": {
-            "context": 131072,
+            "context": 262144,
             "output": 32768,
           },
         },
@@ -218,7 +218,7 @@
             "output": 0,
           },
           "limit": {
-            "context": 65536,
+            "context": 103424,
             "output": 16384,
           },
         },
@@ -232,13 +232,13 @@
   "background_task": {
     "providerConcurrency": {
       // +2 to account for nemotron-nano-4b parallel slots
-      "local-llm": 6,
+      "local-llm": 5,
     },
     "modelConcurrency": {
-      "local-llm/qwen35-moe-35b": 2,
-      "local-llm/qwen3-coder-next": 1,
+      "local-llm/qwen35-moe-35b": 1,
+      //"local-llm/qwen35-moe-35b": 1,
       // 4B model: run up to 4 concurrent trivial tasks
-      "local-llm/nemotron-nano-4b": 4,
+      "wsl-llm/nemotron-nano-4b": 4,
     },
   },
 

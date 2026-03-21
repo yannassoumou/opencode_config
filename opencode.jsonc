@@ -17,7 +17,7 @@
             "output": 0,
           },
           "limit": {
-            "context": 131072,
+            "context": 262144,
             "output": 32768,
           },
         },
@@ -41,6 +41,28 @@
           },
           "limit": {
             "context": 65536,
+            "output": 16384,
+          },
+        },
+      },
+    },
+    // WSL host llama.cpp (same stack as browser UI at wsl-windows:8080 — API is /v1, not #/chat/...)
+    "wsl-llm": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "WSL Windows (llama.cpp)",
+      "options": {
+        "baseURL": "http://wsl-windows.tailfe1a8c.ts.net:8080/v1",
+        "apiKey": "not-needed",
+      },
+      "models": {
+        "nemotron-nano-4b": {
+          "name": "nemotron-nano-4b",
+          "cost": {
+            "input": 0,
+            "output": 0,
+          },
+          "limit": {
+            "context": 103424,
             "output": 16384,
           },
         },
