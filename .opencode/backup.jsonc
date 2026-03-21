@@ -1,0 +1,333 @@
+{
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-openagent.schema.json",
+
+  // Required top-level model for delegation to work
+  "model": "local-llm/qwen35-moe-35b",
+
+  // ============================================================================
+  // AGENTS - Core orchestrators for different task types
+  // ============================================================================
+  "agents": {
+    // Main orchestrator: Fast agent for rapid iterations
+    "sisyphus": {
+      "model": "local-llm/qwen35-moe-35b",
+      "temperature": 0.6,
+      "top_p": 0.95,
+      "maxTokens": 32768,
+      "stream": false,
+      "fallback_models": ["local-llm/qwen3-coder-next"],
+    },
+
+    // Architecture consultation: Deep reasoning agent
+    "oracle": {
+      "model": "local-llm/qwen3-coder-next",
+      "temperature": 1.0,
+      "top_p": 0.95,
+      "maxTokens": 32768,
+      "stream": false,
+      "fallback_models": ["local-llm/qwen35-moe-35b"],
+      "prompt_append": "Focus on architectural patterns, system design, and long-horizon reasoning. Consider scalability and maintainability.",
+    },
+
+    // Research agent: Lightweight triage/exploration
+    "librarian": {
+      "model": "local-llm/nemotron-nano-4b",
+      "temperature": 0.6,
+      "top_p": 0.95,
+      "stream": false,
+    },
+
+    // Exploration/investigation: Lightweight model
+    "explore": {
+      "model": "local-llm/nemotron-nano-4b",
+      "temperature": 0.6,
+      "top_p": 0.95,
+      "stream": false,
+    },
+
+    // Metaprogramming tasks: Deep reasoning
+    "metis": {
+      "model": "local-llm/qwen3-coder-next",
+      "temperature": 1.0,
+      "stream": false,
+      "fallback_models": ["local-llm/qwen35-moe-35b"],
+      "prompt_append": "Provide careful analysis of code patterns, potential optimizations, and edge cases.",
+    },
+
+    // Code fixing: Fast model
+    "hephaestus": {
+      "model": "local-llm/qwen35-moe-35b",
+      "temperature": 0.6,
+      "stream": false,
+      "maxTokens": 16384,
+    },
+
+    // Prometheus inherits from sisyphus
+    "prometheus": {
+      "model": "local-llm/qwen35-moe-35b",
+      "temperature": 0.6,
+      "prompt_append": "Prioritize leveraging deep agents (oracle, metis) in parallel for complex analysis.",
+      "stream": false,
+      "fallback_models": ["local-llm/qwen3-coder-next"],
+    },
+
+    // Sisyphus-Junior: The actual subagent executor for category delegation
+    "sisyphus-junior": {
+      "model": "local-llm/qwen35-moe-35b",
+      "temperature": 0.6,
+      "top_p": 0.95,
+      "maxTokens": 32768,
+      "stream": false,
+      "description": "Subagent executor for category-based task delegation",
+    },
+
+    // OpenCode-Builder: Task system executor
+    "OpenCode-Builder": {
+      "model": "local-llm/qwen35-moe-35b",
+      "temperature": 0.6,
+      "top_p": 0.95,
+      "maxTokens": 32768,
+      "stream": false,
+      "description": "Builds and executes tasks via the task system",
+    },
+
+    // Plan agent: For work plan generation
+    "plan": {
+      "model": "local-llm/qwen3-coder-next",
+      "temperature": 1.0,
+      "top_p": 0.95,
+      "maxTokens": 32768,
+      "stream": false,
+      "description": "Generates structured work plans for multi-step tasks",
+    },
+
+    // Build agent: For build/test operations
+    "build": {
+      "model": "local-llm/qwen35-moe-35b",
+      "temperature": 0.6,
+      "top_p": 0.95,
+      "maxTokens": 32768,
+      "stream": false,
+      "description": "Handles build, test, and lint operations",
+    },
+  },
+
+  // ============================================================================
+  // CATEGORIES - Task classification with model assignment
+  // ============================================================================
+  "categories": {
+    // Trivial tasks - offloaded to nano model
+    "quick": {
+      "model": "local-llm/nemotron-nano-4b",
+      "description": "Quick fixes, minor edits, simple refactoring",
+    },
+
+    // Moderate complexity - fast agent
+    "unspecified-low": {
+      "model": "local-llm/qwen35-moe-35b",
+      "description": "Standard code generation and modifications",
+    },
+
+    // High complexity - deep reasoning agent
+    "unspecified-high": {
+      "model": "local-llm/qwen3-coder-next",
+      "description": "Complex refactoring, architecture decisions, multi-file changes",
+    },
+
+    // Documentation and prose - offloaded to nano model
+    "writing": {
+      "model": "local-llm/nemotron-nano-4b",
+      "description": "Documentation, comments, and prose writing",
+    },
+
+    // Git operations - offloaded to nano model
+    "git": {
+      "model": "local-llm/nemotron-nano-4b",
+      "description": "Git operations, commit messages, branch management",
+    },
+
+    // Debugging - deep reasoning
+    "debugging": {
+      "model": "local-llm/qwen3-coder-next",
+      "description": "Bug investigation, error analysis, root cause analysis",
+    },
+
+    // Performance optimization - deep reasoning
+    "optimization": {
+      "model": "local-llm/qwen3-coder-next",
+      "description": "Performance analysis, bottleneck identification, optimization strategies",
+    },
+
+    // Code review - deep reasoning
+    "code-review": {
+      "model": "local-llm/qwen3-coder-next",
+      "description": "Code review, quality analysis, best practices",
+    },
+
+    // Visual/UI work - fast agent (needs coding ability)
+    "visual-engineering": {
+      "model": "local-llm/qwen35-moe-35b",
+      "description": "Frontend, UI/UX, design, styling, animation",
+    },
+  },
+
+  // ============================================================================
+  // FEATURES - Enable task system for category delegation
+  // ============================================================================
+  "new_task_system_enabled": true,
+
+  // ============================================================================
+  // PROVIDERS - Local LLM configuration (Strix Halo on llama.cpp)
+  // ============================================================================
+  "providers": {
+    "local-llm": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Strix Halo (llama.cpp)",
+      "options": {
+        "baseURL": "http://minisforum.tailfe1a8c.ts.net:1201/v1",
+        "apiKey": "not-needed",
+      },
+      "models": {
+        "qwen35-moe-35b": {
+          "name": "qwen35-moe-35b",
+          "cost": {
+            "input": 0,
+            "output": 0,
+          },
+          "limit": {
+            "context": 131072,
+            "output": 32768,
+          },
+        },
+        "qwen3-coder-next": {
+          "name": "qwen3-coder-next",
+          "cost": {
+            "input": 0,
+            "output": 0,
+          },
+          "limit": {
+            "context": 262144,
+            "output": 32768,
+          },
+        },
+        // Nemotron-3-Nano-4B: Lightweight triage layer (git, writing, quick, explore)
+        "nemotron-nano-4b": {
+          "name": "nemotron-nano-4b",
+          "cost": {
+            "input": 0,
+            "output": 0,
+          },
+          "limit": {
+            "context": 65536,
+            "output": 16384,
+          },
+        },
+      },
+    },
+  },
+
+  // ============================================================================
+  // BACKGROUND TASKS - Concurrency and request management
+  // ============================================================================
+  "background_task": {
+    "providerConcurrency": {
+      // +2 to account for nemotron-nano-4b parallel slots
+      "local-llm": 6,
+    },
+    "modelConcurrency": {
+      "local-llm/qwen35-moe-35b": 2,
+      "local-llm/qwen3-coder-next": 1,
+      // 4B model: run up to 4 concurrent trivial tasks
+      "local-llm/nemotron-nano-4b": 4,
+    },
+  },
+
+  // ============================================================================
+  // FEATURES - Tools, hooks, and integrations
+  // ============================================================================
+  "skills": {
+    "enabled": true,
+  },
+
+  "hooks": {
+    "enabled": true,
+    "disabled_hooks": [],
+  },
+
+  "commands": {
+    "enabled": true,
+  },
+
+  "browser_automation": {
+    "enabled": false,
+  },
+
+  "git_master": {
+    "commit_footer": true,
+    "include_co_authored_by": false,
+  },
+
+  "comment_checker": {
+    "enabled": true,
+  },
+
+  "notification": {
+    "force_enable": true,
+  },
+
+  "disabled_mcps": ["websearch", "grep_app"],
+
+  // ============================================================================
+  // ADVANCED FEATURES
+  // ============================================================================
+  "runtime_fallback": {
+    "enabled": true,
+    "retry_on_errors": [400, 429, 503, 529],
+    "max_fallback_attempts": 2,
+    "cooldown_seconds": 30,
+    "timeout_seconds": 60,
+    "notify_on_fallback": true,
+  },
+
+  "hashline_edit": true,
+
+  // ============================================================================
+  // EXPERIMENTAL FEATURES - Optimizations for local models
+  // ============================================================================
+  "experimental": {
+    "truncate_all_tool_outputs": false,
+    "aggressive_truncation": true,
+    "auto_resume": true,
+    "disable_omo_env": false,
+    "task_system": true,
+    "dynamic_context_pruning": {
+      "enabled": true,
+      "notification": "minimal",
+      "turn_protection": {
+        "enabled": true,
+        "turns": 2,
+      },
+      "protected_tools": [
+        "task",
+        "todowrite",
+        "todoread",
+        "lsp_rename",
+        "session_read",
+        "session_write",
+        "session_search",
+      ],
+      "strategies": {
+        "deduplication": { "enabled": true },
+        "supersede_writes": { "enabled": true, "aggressive": false },
+        "purge_errors": { "enabled": true, "turns": 3 },
+      },
+    },
+  },
+
+  // ============================================================================
+  // TMUX INTEGRATION
+  // ============================================================================
+  "tmux": {
+    "enabled": false,
+  },
+}

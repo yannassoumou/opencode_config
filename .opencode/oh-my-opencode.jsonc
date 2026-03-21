@@ -1,79 +1,79 @@
 {
   "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-openagent.schema.json",
 
-  // Required top-level model for delegation to work
-  "model": "local-llm/qwen35-moe-35b",
+  // Default model for top-level delegation
+  "model": "local-llm/qwen35-122b-q6k",
 
   // ============================================================================
-  // AGENTS - Core orchestrators for different task types
+  // AGENTS
   // ============================================================================
   "agents": {
-    // Main orchestrator: Fast agent for rapid iterations
+    // Main orchestrator — 122B for quality output
     "sisyphus": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "local-llm/qwen35-122b-q6k",
       "temperature": 0.6,
       "top_p": 0.95,
       "maxTokens": 32768,
       "stream": false,
-      "fallback_models": ["local-llm/qwen3-coder-next"],
+      "fallback_models": ["wsl-windows/qwen3.5-9b-q4-k-m"],
     },
 
-    // Architecture consultation: Deep reasoning agent
+    // Architecture consultation — 122B deep reasoning
     "oracle": {
-      "model": "local-llm/qwen3-coder-next",
+      "model": "local-llm/qwen35-122b-q6k",
       "temperature": 1.0,
       "top_p": 0.95,
       "maxTokens": 32768,
       "stream": false,
-      "fallback_models": ["local-llm/qwen35-moe-35b"],
+      "fallback_models": ["wsl-windows/qwen3.5-9b-q4-k-m"],
       "prompt_append": "Focus on architectural patterns, system design, and long-horizon reasoning. Consider scalability and maintainability.",
     },
 
-    // Research agent: Lightweight triage/exploration
+    // Research/triage — 9B lightweight
     "librarian": {
-      "model": "local-llm/nemotron-nano-4b",
+      "model": "wsl-windows/qwen3.5-9b-q4-k-m",
       "temperature": 0.6,
       "top_p": 0.95,
       "stream": false,
     },
 
-    // Exploration/investigation: Lightweight model
+    // Exploration — 9B lightweight
     "explore": {
-      "model": "local-llm/nemotron-nano-4b",
+      "model": "wsl-windows/qwen3.5-9b-q4-k-m",
       "temperature": 0.6,
       "top_p": 0.95,
       "stream": false,
     },
 
-    // Metaprogramming tasks: Deep reasoning
+    // Metaprogramming — 122B deep reasoning
     "metis": {
-      "model": "local-llm/qwen3-coder-next",
+      "model": "local-llm/qwen35-122b-q6k",
       "temperature": 1.0,
       "stream": false,
-      "fallback_models": ["local-llm/qwen35-moe-35b"],
+      "fallback_models": ["wsl-windows/qwen3.5-9b-q4-k-m"],
       "prompt_append": "Provide careful analysis of code patterns, potential optimizations, and edge cases.",
     },
 
-    // Code fixing: Fast model
+    // Code fixing — 9B fast enough for targeted fixes
     "hephaestus": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "wsl-windows/qwen3.5-9b-q4-k-m",
       "temperature": 0.6,
       "stream": false,
       "maxTokens": 16384,
     },
 
-    // Prometheus inherits from sisyphus
+    // Prometheus — 122B with parallel deep-agent hints
     "prometheus": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "local-llm/qwen35-122b-q6k",
       "temperature": 0.6,
       "prompt_append": "Prioritize leveraging deep agents (oracle, metis) in parallel for complex analysis.",
       "stream": false,
-      "fallback_models": ["local-llm/qwen3-coder-next"],
+      "fallback_models": ["wsl-windows/qwen3.5-9b-q4-k-m"],
     },
 
-    // Sisyphus-Junior: The actual subagent executor for category delegation
+    // Subagent executor — 9B handles delegation volume
     "sisyphus-junior": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "wsl-windows/qwen3.5-9b-q4-k-m",
       "temperature": 0.6,
       "top_p": 0.95,
       "maxTokens": 32768,
@@ -81,9 +81,9 @@
       "description": "Subagent executor for category-based task delegation",
     },
 
-    // OpenCode-Builder: Task system executor
+    // Task builder — 9B for structured task execution
     "OpenCode-Builder": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "wsl-windows/qwen3.5-9b-q4-k-m",
       "temperature": 0.6,
       "top_p": 0.95,
       "maxTokens": 32768,
@@ -91,9 +91,9 @@
       "description": "Builds and executes tasks via the task system",
     },
 
-    // Plan agent: For work plan generation
+    // Plan agent — 122B for structured multi-step planning
     "plan": {
-      "model": "local-llm/qwen3-coder-next",
+      "model": "local-llm/qwen35-122b-q6k",
       "temperature": 1.0,
       "top_p": 0.95,
       "maxTokens": 32768,
@@ -101,9 +101,9 @@
       "description": "Generates structured work plans for multi-step tasks",
     },
 
-    // Build agent: For build/test operations
+    // Build/test agent — 9B sufficient for build ops
     "build": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "wsl-windows/qwen3.5-9b-q4-k-m",
       "temperature": 0.6,
       "top_p": 0.95,
       "maxTokens": 32768,
@@ -113,173 +113,135 @@
   },
 
   // ============================================================================
-  // CATEGORIES - Task classification with model assignment
+  // CATEGORIES
   // ============================================================================
   "categories": {
-    // Trivial tasks - offloaded to nano model
+    // Trivial — 9B
     "quick": {
-      "model": "local-llm/nemotron-nano-4b",
+      "model": "wsl-windows/qwen3.5-9b-q4-k-m",
       "description": "Quick fixes, minor edits, simple refactoring",
     },
 
-    // Moderate complexity - fast agent
+    // Standard — 9B
     "unspecified-low": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "wsl-windows/qwen3.5-9b-q4-k-m",
       "description": "Standard code generation and modifications",
     },
 
-    // High complexity - deep reasoning agent
+    // Complex — 122B
     "unspecified-high": {
-      "model": "local-llm/qwen3-coder-next",
+      "model": "local-llm/qwen35-122b-q6k",
       "description": "Complex refactoring, architecture decisions, multi-file changes",
     },
 
-    // Documentation and prose - offloaded to nano model
+    // Docs/prose — 9B
     "writing": {
-      "model": "local-llm/nemotron-nano-4b",
+      "model": "wsl-windows/qwen3.5-9b-q4-k-m",
       "description": "Documentation, comments, and prose writing",
     },
 
-    // Git operations - offloaded to nano model
+    // Git ops — 9B
     "git": {
-      "model": "local-llm/nemotron-nano-4b",
+      "model": "wsl-windows/qwen3.5-9b-q4-k-m",
       "description": "Git operations, commit messages, branch management",
     },
 
-    // Debugging - deep reasoning
+    // Debugging — 122B
     "debugging": {
-      "model": "local-llm/qwen3-coder-next",
+      "model": "local-llm/qwen35-122b-q6k",
       "description": "Bug investigation, error analysis, root cause analysis",
     },
 
-    // Performance optimization - deep reasoning
+    // Optimization — 122B
     "optimization": {
-      "model": "local-llm/qwen3-coder-next",
+      "model": "local-llm/qwen35-122b-q6k",
       "description": "Performance analysis, bottleneck identification, optimization strategies",
     },
 
-    // Code review - deep reasoning
+    // Code review — 122B
     "code-review": {
-      "model": "local-llm/qwen3-coder-next",
+      "model": "local-llm/qwen35-122b-q6k",
       "description": "Code review, quality analysis, best practices",
     },
 
-    // Visual/UI work - fast agent (needs coding ability)
+    // Visual/UI — 9B (fast iteration cycle)
     "visual-engineering": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "wsl-windows/qwen3.5-9b-q4-k-m",
       "description": "Frontend, UI/UX, design, styling, animation",
     },
   },
 
   // ============================================================================
-  // FEATURES - Enable task system for category delegation
-  // ============================================================================
-  "new_task_system_enabled": true,
-
-  // ============================================================================
-  // PROVIDERS - Local LLM configuration (Strix Halo on llama.cpp)
+  // PROVIDERS
   // ============================================================================
   "providers": {
     "local-llm": {
       "npm": "@ai-sdk/openai-compatible",
       "name": "Strix Halo (llama.cpp)",
       "options": {
-        "baseURL": "http://minisforum.tailfe1a8c.ts.net:1201/v1",
+        "baseURL": "http://minisforum.tailfe1a8c.ts.net:8080/v1",
         "apiKey": "not-needed",
       },
       "models": {
-        "qwen35-moe-35b": {
-          "name": "qwen35-moe-35b",
-          "cost": {
-            "input": 0,
-            "output": 0,
-          },
-          "limit": {
-            "context": 131072,
-            "output": 32768,
-          },
+        "qwen35-122b-q6k": {
+          "name": "qwen35-122b-q6k",
+          "cost": { "input": 0.40, "output": 0.40 },
+          "limit": { "context": 65536, "output": 32768 },
         },
-        "qwen3-coder-next": {
-          "name": "qwen3-coder-next",
-          "cost": {
-            "input": 0,
-            "output": 0,
-          },
-          "limit": {
-            "context": 262144,
-            "output": 32768,
-          },
-        },
-        // Nemotron-3-Nano-4B: Lightweight triage layer (git, writing, quick, explore)
-        "nemotron-nano-4b": {
-          "name": "nemotron-nano-4b",
-          "cost": {
-            "input": 0,
-            "output": 0,
-          },
-          "limit": {
-            "context": 65536,
-            "output": 16384,
-          },
+      },
+    },
+
+    "wsl-windows": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "WSL Windows (Qwen 3.5 9B)",
+      "options": {
+        "baseURL": "http://wsl-windows.tailfe1a8c.ts.net:8080/v1",
+        "apiKey": "not-needed",
+      },
+      "models": {
+        "qwen3.5-9b-q4-k-m": {
+          "name": "qwen3.5-9b-q4-k-m",
+          "cost": { "input": 0.20, "output": 0.20 },
+          "limit": { "context": 65536, "output": 32768 },
         },
       },
     },
   },
 
   // ============================================================================
-  // BACKGROUND TASKS - Concurrency and request management
+  // BACKGROUND TASKS — Concurrency tuned to 2-model setup
   // ============================================================================
   "background_task": {
     "providerConcurrency": {
-      // +2 to account for nemotron-nano-4b parallel slots
-      "local-llm": 6,
+      "local-llm": 1,      // 122B Q6 is heavy — keep at 1
+      "wsl-windows": 4,    // 9B is light — allow parallel slots
     },
     "modelConcurrency": {
-      "local-llm/qwen35-moe-35b": 2,
-      "local-llm/qwen3-coder-next": 1,
-      // 4B model: run up to 4 concurrent trivial tasks
-      "local-llm/nemotron-nano-4b": 4,
+      "local-llm/qwen35-122b-q6k": 1,
+      "wsl-windows/qwen3.5-9b-q4-k-m": 4,
     },
   },
 
   // ============================================================================
-  // FEATURES - Tools, hooks, and integrations
+  // REST OF YOUR EXISTING SETTINGS (unchanged)
   // ============================================================================
-  "skills": {
-    "enabled": true,
-  },
+  "new_task_system_enabled": true,
 
-  "hooks": {
-    "enabled": true,
-    "disabled_hooks": [],
-  },
-
-  "commands": {
-    "enabled": true,
-  },
-
-  "browser_automation": {
-    "enabled": false,
-  },
+  "skills": { "enabled": true },
+  "hooks": { "enabled": true, "disabled_hooks": [] },
+  "commands": { "enabled": true },
+  "browser_automation": { "enabled": false },
 
   "git_master": {
     "commit_footer": true,
     "include_co_authored_by": false,
   },
 
-  "comment_checker": {
-    "enabled": true,
-  },
-
-  "notification": {
-    "force_enable": true,
-  },
+  "comment_checker": { "enabled": true },
+  "notification": { "force_enable": true },
 
   "disabled_mcps": ["websearch", "grep_app"],
 
-  // ============================================================================
-  // ADVANCED FEATURES
-  // ============================================================================
   "runtime_fallback": {
     "enabled": true,
     "retry_on_errors": [400, 429, 503, 529],
@@ -291,9 +253,6 @@
 
   "hashline_edit": true,
 
-  // ============================================================================
-  // EXPERIMENTAL FEATURES - Optimizations for local models
-  // ============================================================================
   "experimental": {
     "truncate_all_tool_outputs": false,
     "aggressive_truncation": true,
@@ -303,18 +262,10 @@
     "dynamic_context_pruning": {
       "enabled": true,
       "notification": "minimal",
-      "turn_protection": {
-        "enabled": true,
-        "turns": 2,
-      },
+      "turn_protection": { "enabled": true, "turns": 2 },
       "protected_tools": [
-        "task",
-        "todowrite",
-        "todoread",
-        "lsp_rename",
-        "session_read",
-        "session_write",
-        "session_search",
+        "task", "todowrite", "todoread",
+        "lsp_rename", "session_read", "session_write", "session_search",
       ],
       "strategies": {
         "deduplication": { "enabled": true },
@@ -324,10 +275,13 @@
     },
   },
 
-  // ============================================================================
-  // TMUX INTEGRATION
-  // ============================================================================
-  "tmux": {
-    "enabled": false,
+  "compaction": {
+    "auto": true,
+    "prune": true,
+    "reserved": 16384,
   },
+
+  "plugin": ["oh-my-opencode@latest"],
+
+  "tmux": { "enabled": false },
 }

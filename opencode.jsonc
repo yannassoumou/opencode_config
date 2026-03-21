@@ -7,50 +7,92 @@
       "name": "Strix Halo (llama.cpp)",
       "options": {
         "baseURL": "http://minisforum.tailfe1a8c.ts.net:8080/v1",
-        "apiKey": "not-needed",
+        "apiKey": "not-needed"
       },
       "models": {
         "qwen35-moe-35b": {
           "name": "qwen35-moe-35b",
           "cost": {
-            "input": 0,
-            "output": 0,
+            "input": 0.30,
+            "output": 0.30
           },
           "limit": {
             "context": 131072,
-            "output": 32768,
-          },
+            "output": 32768
+          }
         },
         "qwen3-coder-next": {
           "name": "qwen3-coder-next",
           "cost": {
-            "input": 0,
-            "output": 0,
+            "input": 0.40,
+            "output": 0.40
           },
           "limit": {
             "context": 262144,
-            "output": 32768,
-          },
+            "output": 32768
+          }
         },
-        // Nemotron-3-Nano-4B: Lightweight triage layer (git, writing, quick, explore)
         "nemotron-nano-4b": {
           "name": "nemotron-nano-4b",
           "cost": {
-            "input": 0,
-            "output": 0,
+            "input": 0.10,
+            "output": 0.10
           },
           "limit": {
             "context": 65536,
-            "output": 16384,
-          },
+            "output": 16384
+          }
         },
-      },
+        "qwen35-122b-q6k": {
+          "name": "qwen35-122b-q6k",
+          "cost": {
+            "input": 0.40,
+            "output": 0.40
+          },
+          "limit": {
+            "context": 65536,
+            "output": 32768
+          }
+        },
+        "qwen35-122b-mxp": {
+          "name": "qwen35-122b-mxp",
+          "cost": {
+            "input": 0.30,
+            "output": 0.30
+          },
+          "limit": {
+            "context": 131072,
+            "output": 32768
+          }
+        }
+      }
     },
+    "wsl-windows": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "WSL Windows (Qwen 3.5 9B)",
+      "options": {
+        "baseURL": "http://wsl-windows.tailfe1a8c.ts.net:8080/v1",
+        "apiKey": "not-needed"
+      },
+      "models": {
+        "qwen3.5-9b-q4-k-m": {
+          "name": "qwen3.5-9b-q4-k-m",
+          "cost": {
+            "input": 0.20,
+            "output": 0.20
+          },
+          "limit": {
+            "context": 65536,
+            "output": 32768
+          }
+        }
+      }
+    }
   },
   "compaction": {
     "auto": true,
     "prune": true,
-    "reserved": 16384,
+    "reserved": 16384
   },
-  "plugin": ["oh-my-opencode@latest"],
+  "plugin": ["oh-my-opencode@latest"]
 }
