@@ -15,12 +15,12 @@
       "top_p": 0.95,
       "maxTokens": 32768,
       "stream": false,
-      "fallback_models": ["local-llm/qwen3-coder-next"],
+      "fallback_models": ["wsl-llm/qwen3.5-9b-q4-k-m"],
     },
 
     // Architecture consultation: Deep reasoning agent
     "oracle": {
-      "model": "local-llm/qwen3-coder-next",
+      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
       "temperature": 1.0,
       "top_p": 0.95,
       "maxTokens": 32768,
@@ -31,7 +31,7 @@
 
     // Research agent: Lightweight triage/exploration
     "librarian": {
-      "model": "local-llm/nemotron-nano-4b",
+      "model": "local-llm/qwen3.5-9b-q4-k-m",
       "temperature": 0.6,
       "top_p": 0.95,
       "stream": false,
@@ -39,7 +39,7 @@
 
     // Exploration/investigation: Lightweight model
     "explore": {
-      "model": "local-llm/nemotron-nano-4b",
+      "model": "local-llm/qwen3.5-9b-q4-k-m",
       "temperature": 0.6,
       "top_p": 0.95,
       "stream": false,
@@ -47,7 +47,7 @@
 
     // Metaprogramming tasks: Deep reasoning
     "metis": {
-      "model": "local-llm/qwen3-coder-next",
+      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
       "temperature": 1.0,
       "stream": false,
       "fallback_models": ["local-llm/qwen35-moe-35b"],
@@ -68,7 +68,7 @@
       "temperature": 0.6,
       "prompt_append": "Prioritize leveraging deep agents (oracle, metis) in parallel for complex analysis.",
       "stream": false,
-      "fallback_models": ["local-llm/qwen3-coder-next"],
+      "fallback_models": ["wsl-llm/qwen3.5-9b-q4-k-m"],
     },
 
     // Sisyphus-Junior: The actual subagent executor for category delegation
@@ -93,7 +93,7 @@
 
     // Plan agent: For work plan generation
     "plan": {
-      "model": "local-llm/qwen3-coder-next",
+      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
       "temperature": 1.0,
       "top_p": 0.95,
       "maxTokens": 32768,
@@ -118,7 +118,7 @@
   "categories": {
     // Trivial tasks - offloaded to nano model
     "quick": {
-      "model": "local-llm/nemotron-nano-4b",
+      "model": "local-llm/qwen3.5-9b-q4-k-m",
       "description": "Quick fixes, minor edits, simple refactoring",
     },
 
@@ -130,37 +130,37 @@
 
     // High complexity - deep reasoning agent
     "unspecified-high": {
-      "model": "local-llm/qwen3-coder-next",
+      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
       "description": "Complex refactoring, architecture decisions, multi-file changes",
     },
 
     // Documentation and prose - offloaded to nano model
     "writing": {
-      "model": "local-llm/nemotron-nano-4b",
+      "model": "local-llm/qwen3.5-9b-q4-k-m",
       "description": "Documentation, comments, and prose writing",
     },
 
     // Git operations - offloaded to nano model
     "git": {
-      "model": "local-llm/nemotron-nano-4b",
+      "model": "local-llm/qwen3.5-9b-q4-k-m",
       "description": "Git operations, commit messages, branch management",
     },
 
     // Debugging - deep reasoning
     "debugging": {
-      "model": "local-llm/qwen3-coder-next",
+      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
       "description": "Bug investigation, error analysis, root cause analysis",
     },
 
     // Performance optimization - deep reasoning
     "optimization": {
-      "model": "local-llm/qwen3-coder-next",
+      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
       "description": "Performance analysis, bottleneck identification, optimization strategies",
     },
 
     // Code review - deep reasoning
     "code-review": {
-      "model": "local-llm/qwen3-coder-next",
+      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
       "description": "Code review, quality analysis, best practices",
     },
 
@@ -179,12 +179,12 @@
   // ============================================================================
   // PROVIDERS - Local LLM configuration (Strix Halo on llama.cpp)
   // ============================================================================
-  "providers": {
+  "provider": {
     "local-llm": {
       "npm": "@ai-sdk/openai-compatible",
       "name": "Strix Halo (llama.cpp)",
       "options": {
-        "baseURL": "http://minisforum.tailfe1a8c.ts.net:1201/v1",
+        "baseURL": "http://minisforum.tailfe1a8c.ts.net:8080/v1",
         "apiKey": "not-needed",
       },
       "models": {
@@ -195,7 +195,7 @@
             "output": 0,
           },
           "limit": {
-            "context": 131072,
+            "context": 262144,
             "output": 32768,
           },
         },
@@ -210,17 +210,26 @@
             "output": 32768,
           },
         },
-        // Nemotron-3-Nano-4B: Lightweight triage layer (git, writing, quick, explore)
-        "nemotron-nano-4b": {
-          "name": "nemotron-nano-4b",
-          "cost": {
-            "input": 0,
-            "output": 0,
-          },
-          "limit": {
-            "context": 65536,
-            "output": 16384,
-          },
+      },
+    },
+    "wsl-llm": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "wsl-llm (llama.cpp)",
+      "options": {
+        "baseURL": "http://wsl-windows.tailfe1a8c.ts.net:8080/v1",
+        "apiKey": "not-needed",
+      },
+    },
+    "models": {
+      "qwen3.5-9b-q4-k-m": {
+        "name": "qwen3.5-9b-q4-k-m",
+        "cost": {
+          "input": 0,
+          "output": 0,
+        },
+        "limit": {
+          "context": 65536,
+          "output": 16384,
         },
       },
     },
@@ -231,14 +240,14 @@
   // ============================================================================
   "background_task": {
     "providerConcurrency": {
-      // +2 to account for nemotron-nano-4b parallel slots
+      // +2 to account for qwen3.5-9b-q4-k-m parallel slots
       "local-llm": 6,
     },
     "modelConcurrency": {
       "local-llm/qwen35-moe-35b": 2,
-      "local-llm/qwen3-coder-next": 1,
+      //"local-llm/qwen3-coder-next": 1,
       // 4B model: run up to 4 concurrent trivial tasks
-      "local-llm/nemotron-nano-4b": 4,
+      "wsl-llm/qwen3.5-9b-q4-k-m": 4,
     },
   },
 
