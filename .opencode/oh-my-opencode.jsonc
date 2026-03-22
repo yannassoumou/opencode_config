@@ -25,7 +25,7 @@
       "top_p": 0.95,
       "maxTokens": 32768,
       "stream": false,
-      "fallback_models": ["local-llm/qwen35-moe-35b"],
+      "fallback_models": ["wsl-llm/nemotron-nano-4b"],
       "prompt_append": "Focus on architectural patterns, system design, and long-horizon reasoning. Consider scalability and maintainability.",
     },
 
@@ -50,7 +50,7 @@
       "model": "wsl-llm/qwen3.5-9b-q4-k-m",
       "temperature": 1.0,
       "stream": false,
-      "fallback_models": ["local-llm/qwen35-moe-35b"],
+      "fallback_models": ["wsl-llm/nemotron-nano-4b"],
       "prompt_append": "Provide careful analysis of code patterns, potential optimizations, and edge cases.",
     },
 
