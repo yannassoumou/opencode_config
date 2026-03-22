@@ -41,20 +41,22 @@
         "baseURL": "http://wsl-windows.tailfe1a8c.ts.net:8080/v1",
         "apiKey": "not-needed",
       },
-    },
-    "models": {
-      "qwen3.5-9b-q4-k-m": {
-        "name": "qwen3.5-9b-q4-k-m",
-        "cost": {
-          "input": 0,
-          "output": 0,
-        },
-        "limit": {
-          "context": 65536,
-          "output": 16384,
+      "models": {
+        "qwen3.5-9b-q4-k-m": {
+          "name": "qwen3.5-9b-q4-k-m",
+          "cost": {
+            "input": 0,
+            "output": 0,
+          },
+          "limit": {
+            "context": 65536,
+            "output": 16384,
+          },
         },
       },
     },
+
+    // WSL host llama.cpp (same stack as browser UI at wsl-windows:8080 — API is /v1, not #/chat/...)
   },
   "compaction": {
     "auto": true,
