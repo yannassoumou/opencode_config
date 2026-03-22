@@ -1,6 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "local-llm/qwen35-122b-mxp",
+  "model": "local-llm/qwen35-moe-35b",
   "provider": {
     "local-llm": {
       "npm": "@ai-sdk/openai-compatible",
@@ -10,52 +10,53 @@
         "apiKey": "not-needed",
       },
       "models": {
-        "qwen35-122b-mxp": {
-          "name": "qwen35-122b-mxp",
+        "qwen35-moe-35b": {
+          "name": "qwen35-moe-35b",
           "cost": {
-            "input": 0.3,
-            "output": 0.3,
+            "input": 0,
+            "output": 0,
           },
           "limit": {
             "context": 262144,
             "output": 32768,
           },
         },
-        "qwen35-moe-35b": {
-          "name": "qwen35-moe-35b",
-          "cost": {
-            "input": 0.3,
-            "output": 0.3,
-          },
-          "limit": {
-            "context": 131072,
-            "output": 32768,
-          },
-        },
-      },
-    },
-    // WSL host llama.cpp (same stack as browser UI at wsl-windows:8080 — API is /v1, not #/chat/...)
-    "wsl-llm": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "WSL Windows (llama.cpp)",
-      "options": {
-        "baseURL": "http://wsl-windows.tailfe1a8c.ts.net:8080/v1",
-        "apiKey": "not-needed",
-      },
-      "models": {
-        "nemotron-nano-4b": {
-          "name": "nemotron-nano-4b",
+        "qwen3-coder-next": {
+          "name": "qwen3-coder-next",
           "cost": {
             "input": 0,
             "output": 0,
           },
           "limit": {
-            "context": 103424,
+            "context": 262144,
+            "output": 32768,
+          },
+        },
+      },
+    },
+    "wsl-llm": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "wsl-llm (llama.cpp)",
+      "options": {
+        "baseURL": "http://wsl-windows.tailfe1a8c.ts.net:8080/v1",
+        "apiKey": "not-needed",
+      },
+      "models": {
+        "qwen3.5-9b-q4-k-m": {
+          "name": "qwen3.5-9b-q4-k-m",
+          "cost": {
+            "input": 0,
+            "output": 0,
+          },
+          "limit": {
+            "context": 65536,
             "output": 16384,
           },
         },
       },
     },
+
+    // WSL host llama.cpp (same stack as browser UI at wsl-windows:8080 — API is /v1, not #/chat/...)
   },
   "compaction": {
     "auto": true,

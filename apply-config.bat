@@ -1,10 +1,16 @@
 @echo off
 setlocal enabledelayedexpansion
 
-REM Déterminer le répertoire du script et le répertoire cible (parent)
+REM Répertoire du script (avec \ final) et répertoire cible = parent (projet à configurer)
 set "SCRIPT_DIR=%~dp0"
-set "TARGET_DIR=%SCRIPT_DIR%"
-set "TARGET_DIR=%TARGET_DIR:~0,-1%"
+set "SCRIPT_FOLDER=%SCRIPT_DIR:~0,-1%"
+pushd "%SCRIPT_DIR%.." >nul 2>&1
+if errorlevel 1 (
+    echo ❌ Impossible de déterminer le dossier parent de %SCRIPT_DIR%
+    exit /b 1
+)
+set "TARGET_DIR=%CD%"
+popd >nul 2>&1
 
 echo 🔧 Applying OpenCode configuration to: %TARGET_DIR%
 echo.
@@ -25,7 +31,7 @@ if exist "%TARGET_DIR%\opencode.jsonc" (
 )
 
 REM Vérifier si .opencode/ existe déjà
-if exist "%TARGET_DIR%.opencode" (
+if exist "%TARGET_DIR%\.opencode\" (
     echo ⚠️  .opencode/ existe déjà dans %TARGET_DIR%
     set /p "OVERWRITE=Voulez-vous l'écraser ? (o=oui, n=non, q=quitter): "
     
@@ -41,12 +47,12 @@ if exist "%TARGET_DIR%.opencode" (
 
 echo 📦 Copie des fichiers...
 
-REM Copier opencode.jsonc à la racine
-copy "%SCRIPT_DIR%opencode.jsonc" "%TARGET_DIR%\" >nul
+REM Copier opencode.jsonc à la racine du projet
+copy /Y "%SCRIPT_DIR%opencode.jsonc" "%TARGET_DIR%\" >nul
 echo   ✓ opencode.jsonc
 
-REM Copier .opencode/ en entier
-xcopy /E /C /I "%SCRIPT_DIR%.opencode%" "%TARGET_DIR%.opencode\" >nul
+REM Copier .opencode/ en entier (chemin explicite avec \ avant .opencode)
+xcopy /E /C /I /Y "%SCRIPT_DIR%.opencode" "%TARGET_DIR%\.opencode\" >nul
 echo   ✓ .opencode/
 
 echo.
@@ -54,14 +60,23 @@ echo ✅ OpenCode configuration appliquée avec succès !
 echo.
 echo 🗑️  Nettoyage du dossier temporaire...
 
-REM Supprimer le dossier temporaire (le dossier où le script se trouve)
-REM Le script s'exécute depuis .tmp-opencode-config/, on supprime tout
-cd /d "%SCRIPT_DIR%"
-for /f "delims=" %%i in ('cd') do set "CURRENT_DIR=%%i"
-if not "%CURRENT_DIR%"=="" (
-    rd /s /q "%CURRENT_DIR%"
+REM Ne jamais supprimer le répertoire courant : cd vers le projet, puis rd sur le dossier du script uniquement
+cd /d "%TARGET_DIR%"
+if errorlevel 1 (
+    echo ⚠️  Impossible de se placer dans %TARGET_DIR% — nettoyage manuel du dossier temporaire peut être nécessaire.
+    exit /b 1
 )
 
+for %%I in ("%SCRIPT_FOLDER%") do set "SCRIPT_LEAF=%%~nxI"
+if /i not "%SCRIPT_LEAF%"==".tmp-opencode-config" (
+    echo ⚠️  Suppression auto désactivée : le script n'est pas dans un dossier nommé .tmp-opencode-config
+    echo     ^(dossier actuel : %SCRIPT_FOLDER%^). Supprimez ce dossier à la main si c'était une copie temporaire.
+    goto :after_cleanup
+)
+
+rd /s /q "%SCRIPT_FOLDER%"
 echo ✅ Dossier temporaire supprimé.
+
+:after_cleanup
 echo.
 echo 🎉 Prêt ! Votre OpenCode config est maintenant configuré.

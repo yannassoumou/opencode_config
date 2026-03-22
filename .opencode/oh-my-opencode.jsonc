@@ -1,26 +1,26 @@
 {
-  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-opencode.schema.json",
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-openagent.schema.json",
 
-  // Default model for top-level delegation
-  "model": "local-llm/qwen35-122b-mxp",
+  // Required top-level model for delegation to work
+  "model": "local-llm/qwen35-moe-35b",
 
   // ============================================================================
-  // AGENTS
+  // AGENTS - Core orchestrators for different task types
   // ============================================================================
   "agents": {
-    // Main orchestrator — 122b-mxp for quality output + full 131K context
+    // Main orchestrator: Fast agent for rapid iterations
     "sisyphus": {
-      "model": "local-llm/qwen35-122b-mxp",
+      "model": "local-llm/qwen35-moe-35b",
       "temperature": 0.6,
       "top_p": 0.95,
       "maxTokens": 32768,
       "stream": false,
-      "fallback_models": ["local-llm/qwen35-moe-35b"],
+      "fallback_models": ["wsl-llm/qwen3.5-9b-q4-k-m"],
     },
 
-    // Architecture consultation — 122b-mxp deep reasoning
+    // Architecture consultation: Deep reasoning agent
     "oracle": {
-      "model": "local-llm/qwen35-122b-mxp",
+      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
       "temperature": 1.0,
       "top_p": 0.95,
       "maxTokens": 32768,
@@ -29,32 +29,32 @@
       "prompt_append": "Focus on architectural patterns, system design, and long-horizon reasoning. Consider scalability and maintainability.",
     },
 
-    // Research/triage — 35b fast enough, saves 122b slots
+    // Research agent: Lightweight triage/exploration
     "librarian": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "local-llm/qwen3.5-9b-q4-k-m",
       "temperature": 0.6,
       "top_p": 0.95,
       "stream": false,
     },
 
-    // Exploration — 35b lightweight
+    // Exploration/investigation: Lightweight model
     "explore": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "local-llm/qwen3.5-9b-q4-k-m",
       "temperature": 0.6,
       "top_p": 0.95,
       "stream": false,
     },
 
-    // Metaprogramming — 122b-mxp deep reasoning + large context for big codebases
+    // Metaprogramming tasks: Deep reasoning
     "metis": {
-      "model": "local-llm/qwen35-122b-mxp",
+      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
       "temperature": 1.0,
       "stream": false,
       "fallback_models": ["wsl-llm/nemotron-nano-4b"],
       "prompt_append": "Provide careful analysis of code patterns, potential optimizations, and edge cases.",
     },
 
-    // Code fixing — 35b fast for targeted single-file fixes
+    // Code fixing: Fast model
     "hephaestus": {
       "model": "local-llm/qwen35-moe-35b",
       "temperature": 0.6,
@@ -62,16 +62,16 @@
       "maxTokens": 16384,
     },
 
-    // Prometheus — 122b-mxp with parallel deep-agent hints
+    // Prometheus inherits from sisyphus
     "prometheus": {
-      "model": "local-llm/qwen35-122b-mxp",
+      "model": "local-llm/qwen35-moe-35b",
       "temperature": 0.6,
       "prompt_append": "Prioritize leveraging deep agents (oracle, metis) in parallel for complex analysis.",
       "stream": false,
-      "fallback_models": ["local-llm/qwen35-moe-35b"],
+      "fallback_models": ["wsl-llm/qwen3.5-9b-q4-k-m"],
     },
 
-    // Subagent executor — 35b handles delegation volume
+    // Sisyphus-Junior: The actual subagent executor for category delegation
     "sisyphus-junior": {
       "model": "local-llm/qwen35-moe-35b",
       "temperature": 0.6,
@@ -81,7 +81,7 @@
       "description": "Subagent executor for category-based task delegation",
     },
 
-    // Task builder — 35b for structured task execution
+    // OpenCode-Builder: Task system executor
     "OpenCode-Builder": {
       "model": "local-llm/qwen35-moe-35b",
       "temperature": 0.6,
@@ -91,10 +91,9 @@
       "description": "Builds and executes tasks via the task system",
     },
 
-    // Plan agent — 122b-mxp for structured multi-step planning
-    // Benefits most from the 131K context (can see entire codebase while planning)
+    // Plan agent: For work plan generation
     "plan": {
-      "model": "local-llm/qwen35-122b-mxp",
+      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
       "temperature": 1.0,
       "top_p": 0.95,
       "maxTokens": 32768,
@@ -102,7 +101,7 @@
       "description": "Generates structured work plans for multi-step tasks",
     },
 
-    // Build/test agent — 35b sufficient for build ops
+    // Build agent: For build/test operations
     "build": {
       "model": "local-llm/qwen35-moe-35b",
       "temperature": 0.6,
@@ -114,58 +113,58 @@
   },
 
   // ============================================================================
-  // CATEGORIES
+  // CATEGORIES - Task classification with model assignment
   // ============================================================================
   "categories": {
-    // Trivial — 35b
+    // Trivial tasks - offloaded to nano model
     "quick": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "local-llm/qwen3.5-9b-q4-k-m",
       "description": "Quick fixes, minor edits, simple refactoring",
     },
 
-    // Standard — 35b
+    // Moderate complexity - fast agent
     "unspecified-low": {
       "model": "local-llm/qwen35-moe-35b",
       "description": "Standard code generation and modifications",
     },
 
-    // Complex — 122b-mxp (131K context shines on multi-file changes)
+    // High complexity - deep reasoning agent
     "unspecified-high": {
-      "model": "local-llm/qwen35-122b-mxp",
+      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
       "description": "Complex refactoring, architecture decisions, multi-file changes",
     },
 
-    // Docs/prose — 35b
+    // Documentation and prose - offloaded to nano model
     "writing": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "local-llm/qwen3.5-9b-q4-k-m",
       "description": "Documentation, comments, and prose writing",
     },
 
-    // Git ops — 35b
+    // Git operations - offloaded to nano model
     "git": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "local-llm/qwen3.5-9b-q4-k-m",
       "description": "Git operations, commit messages, branch management",
     },
 
-    // Debugging — 122b-mxp (large context = full stack trace + codebase at once)
+    // Debugging - deep reasoning
     "debugging": {
-      "model": "local-llm/qwen35-122b-mxp",
+      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
       "description": "Bug investigation, error analysis, root cause analysis",
     },
 
-    // Optimization — 122b-mxp
+    // Performance optimization - deep reasoning
     "optimization": {
-      "model": "local-llm/qwen35-122b-mxp",
+      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
       "description": "Performance analysis, bottleneck identification, optimization strategies",
     },
 
-    // Code review — 122b-mxp
+    // Code review - deep reasoning
     "code-review": {
-      "model": "local-llm/qwen35-122b-mxp",
+      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
       "description": "Code review, quality analysis, best practices",
     },
 
-    // Visual/UI — 35b (fast iteration cycle)
+    // Visual/UI work - fast agent (needs coding ability)
     "visual-engineering": {
       "model": "local-llm/qwen35-moe-35b",
       "description": "Frontend, UI/UX, design, styling, animation",
@@ -173,9 +172,14 @@
   },
 
   // ============================================================================
-  // PROVIDERS
+  // FEATURES - Enable task system for category delegation
   // ============================================================================
-  "providers": {
+  "new_task_system_enabled": true,
+
+  // ============================================================================
+  // PROVIDERS - Local LLM configuration (Strix Halo on llama.cpp)
+  // ============================================================================
+  "provider": {
     "local-llm": {
       "npm": "@ai-sdk/openai-compatible",
       "name": "Strix Halo (llama.cpp)",
@@ -184,21 +188,23 @@
         "apiKey": "not-needed",
       },
       "models": {
-        // 122B MXP — deep reasoning, large context
-        // Use for: oracle, metis, plan, debugging, code-review, optimization
-        "qwen35-122b-mxp": {
-          "name": "qwen35-122b-mxp",
-          "cost": { "input": 0.3, "output": 0.3 },
+        "qwen35-moe-35b": {
+          "name": "qwen35-moe-35b",
+          "cost": {
+            "input": 0,
+            "output": 0,
+          },
           "limit": {
-            "context": 131072, // double vs q6k — use it for plan/oracle
+            "context": 262144,
             "output": 32768,
           },
         },
-        // 35B MoE — fast, efficient, handles standard + trivial tasks
-        // Use for: hephaestus, build, librarian, explore, git, writing, quick
-        "qwen35-moe-35b": {
-          "name": "qwen35-moe-35b",
-          "cost": { "input": 0.3, "output": 0.3 },
+        "qwen3-coder-next": {
+          "name": "qwen3-coder-next",
+          "cost": {
+            "input": 0,
+            "output": 0,
+          },
           "limit": {
             "context": 262144,
             "output": 32768,
@@ -206,44 +212,83 @@
         },
       },
     },
+    "wsl-llm": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "wsl-llm (llama.cpp)",
+      "options": {
+        "baseURL": "http://wsl-windows.tailfe1a8c.ts.net:8080/v1",
+        "apiKey": "not-needed",
+      },
+    },
+    "models": {
+      "qwen3.5-9b-q4-k-m": {
+        "name": "qwen3.5-9b-q4-k-m",
+        "cost": {
+          "input": 0,
+          "output": 0,
+        },
+        "limit": {
+          "context": 65536,
+          "output": 16384,
+        },
+      },
+    },
   },
 
   // ============================================================================
-  // BACKGROUND TASKS
-  // Concurrency tuned for single provider, two models on same hardware.
-  // 122b-mxp is heavier — keep at 1 to avoid VRAM contention.
-  // 35b MoE is efficient — allow 2 concurrent slots.
+  // BACKGROUND TASKS - Concurrency and request management
   // ============================================================================
   "background_task": {
     "providerConcurrency": {
-      "local-llm": 3, // 1 for 122b + 2 for 35b
+      // +2 to account for qwen3.5-9b-q4-k-m parallel slots
+      "local-llm": 6,
     },
     "modelConcurrency": {
-      "local-llm/qwen35-122b-mxp": 1,
       "local-llm/qwen35-moe-35b": 2,
+      //"local-llm/qwen3-coder-next": 1,
+      // 4B model: run up to 4 concurrent trivial tasks
+      "wsl-llm/qwen3.5-9b-q4-k-m": 4,
     },
   },
 
   // ============================================================================
-  // REST OF SETTINGS (unchanged from your original)
+  // FEATURES - Tools, hooks, and integrations
   // ============================================================================
-  "new_task_system_enabled": true,
+  "skills": {
+    "enabled": true,
+  },
 
-  "skills": { "enabled": true },
-  "hooks": { "enabled": true, "disabled_hooks": [] },
-  "commands": { "enabled": true },
-  "browser_automation": { "enabled": false },
+  "hooks": {
+    "enabled": true,
+    "disabled_hooks": [],
+  },
+
+  "commands": {
+    "enabled": true,
+  },
+
+  "browser_automation": {
+    "enabled": false,
+  },
 
   "git_master": {
     "commit_footer": true,
     "include_co_authored_by": false,
   },
 
-  "comment_checker": { "enabled": true },
-  "notification": { "force_enable": true },
+  "comment_checker": {
+    "enabled": true,
+  },
+
+  "notification": {
+    "force_enable": true,
+  },
 
   "disabled_mcps": ["websearch", "grep_app"],
 
+  // ============================================================================
+  // ADVANCED FEATURES
+  // ============================================================================
   "runtime_fallback": {
     "enabled": true,
     "retry_on_errors": [400, 429, 503, 529],
@@ -255,6 +300,9 @@
 
   "hashline_edit": true,
 
+  // ============================================================================
+  // EXPERIMENTAL FEATURES - Optimizations for local models
+  // ============================================================================
   "experimental": {
     "truncate_all_tool_outputs": false,
     "aggressive_truncation": true,
@@ -264,7 +312,10 @@
     "dynamic_context_pruning": {
       "enabled": true,
       "notification": "minimal",
-      "turn_protection": { "enabled": true, "turns": 2 },
+      "turn_protection": {
+        "enabled": true,
+        "turns": 2,
+      },
       "protected_tools": [
         "task",
         "todowrite",
@@ -282,5 +333,10 @@
     },
   },
 
-  "tmux": { "enabled": false },
+  // ============================================================================
+  // TMUX INTEGRATION
+  // ============================================================================
+  "tmux": {
+    "enabled": false,
+  },
 }
