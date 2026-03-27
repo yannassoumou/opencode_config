@@ -8,7 +8,7 @@
   // AGENTS - Core orchestrators for different task types
   // ============================================================================
   "agents": {
-    // Main orchestrator: Fast agent for rapid iterations
+    // Main orchestrator: 35B for complex coordination
     "sisyphus": {
       "model": "local-llm/qwen35-moe-35b",
       "temperature": 0.6,
@@ -18,51 +18,51 @@
       "fallback_models": ["wsl-llm/qwen3.5-9b-q4-k-m"],
     },
 
-    // Architecture consultation: Deep reasoning agent
+    // Architecture consultation: 35B for deep reasoning (was 9B)
     "oracle": {
-      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
+      "model": "local-llm/qwen35-moe-35b",
       "temperature": 1.0,
       "top_p": 0.95,
       "maxTokens": 32768,
       "stream": false,
-      "fallback_models": ["wsl-llm/nemotron-nano-4b"],
+      "fallback_models": ["wsl-llm/qwen3.5-9b-q4-k-m"],
       "prompt_append": "Focus on architectural patterns, system design, and long-horizon reasoning. Consider scalability and maintainability.",
     },
 
-    // Research agent: Lightweight triage/exploration
+    // Research agent: 9B for lightweight triage/exploration
     "librarian": {
-      "model": "local-llm/qwen3.5-9b-q4-k-m",
-      "temperature": 0.6,
-      "top_p": 0.95,
-      "stream": false,
-    },
-
-    // Exploration/investigation: Lightweight model
-    "explore": {
-      "model": "local-llm/qwen3.5-9b-q4-k-m",
-      "temperature": 0.6,
-      "top_p": 0.95,
-      "stream": false,
-    },
-
-    // Metaprogramming tasks: Deep reasoning
-    "metis": {
       "model": "wsl-llm/qwen3.5-9b-q4-k-m",
+      "temperature": 0.6,
+      "top_p": 0.95,
+      "stream": false,
+    },
+
+    // Exploration/investigation: 9B for speed
+    "explore": {
+      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
+      "temperature": 0.6,
+      "top_p": 0.95,
+      "stream": false,
+    },
+
+    // Metaprogramming tasks: 35B for deep code analysis (was 9B)
+    "metis": {
+      "model": "local-llm/qwen35-moe-35b",
       "temperature": 1.0,
       "stream": false,
-      "fallback_models": ["wsl-llm/nemotron-nano-4b"],
+      "fallback_models": ["wsl-llm/qwen3.5-9b-q4-k-m"],
       "prompt_append": "Provide careful analysis of code patterns, potential optimizations, and edge cases.",
     },
 
-    // Code fixing: Fast model
+    // Code fixing: 9B for fast, straightforward fixes
     "hephaestus": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
       "temperature": 0.6,
       "stream": false,
       "maxTokens": 16384,
     },
 
-    // Prometheus inherits from sisyphus
+    // Prometheus inherits from sisyphus (35B for orchestration)
     "prometheus": {
       "model": "local-llm/qwen35-moe-35b",
       "temperature": 0.6,
@@ -71,7 +71,7 @@
       "fallback_models": ["wsl-llm/qwen3.5-9b-q4-k-m"],
     },
 
-    // Sisyphus-Junior: The actual subagent executor for category delegation
+    // Sisyphus-Junior: 35B for task execution coordination
     "sisyphus-junior": {
       "model": "local-llm/qwen35-moe-35b",
       "temperature": 0.6,
@@ -81,19 +81,19 @@
       "description": "Subagent executor for category-based task delegation",
     },
 
-    // OpenCode-Builder: Task system executor
+    // OpenCode-Builder: 35B for complex task system execution
     "OpenCode-Builder": {
       "model": "local-llm/qwen35-moe-35b",
       "temperature": 0.6,
       "top_p": 0.95,
       "maxTokens": 32768,
       "stream": false,
-      "description": "Builds and executes tasks via the task system",
+      "description": "Builds and executes complex tasks via the task system",
     },
 
-    // Plan agent: For work plan generation
+    // Plan agent: 35B for detailed planning (was 9B)
     "plan": {
-      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
+      "model": "local-llm/qwen35-moe-35b",
       "temperature": 1.0,
       "top_p": 0.95,
       "maxTokens": 32768,
@@ -101,12 +101,12 @@
       "description": "Generates structured work plans for multi-step tasks",
     },
 
-    // Build agent: For build/test operations
+    // Build agent: 9B for build/test operations (fast feedback)
     "build": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
       "temperature": 0.6,
       "top_p": 0.95,
-      "maxTokens": 32768,
+      "maxTokens": 16384,
       "stream": false,
       "description": "Handles build, test, and lint operations",
     },
@@ -116,55 +116,55 @@
   // CATEGORIES - Task classification with model assignment
   // ============================================================================
   "categories": {
-    // Trivial tasks - offloaded to nano model
+    // Trivial tasks - 9B for speed
     "quick": {
-      "model": "local-llm/qwen3.5-9b-q4-k-m",
+      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
       "description": "Quick fixes, minor edits, simple refactoring",
     },
 
-    // Moderate complexity - fast agent
+    // Moderate complexity - 35B for better code generation
     "unspecified-low": {
       "model": "local-llm/qwen35-moe-35b",
       "description": "Standard code generation and modifications",
     },
 
-    // High complexity - deep reasoning agent
+    // High complexity - 35B for deep reasoning
     "unspecified-high": {
-      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
+      "model": "local-llm/qwen35-moe-35b",
       "description": "Complex refactoring, architecture decisions, multi-file changes",
     },
 
-    // Documentation and prose - offloaded to nano model
+    // Documentation and prose - 9B (fast writing)
     "writing": {
-      "model": "local-llm/qwen3.5-9b-q4-k-m",
+      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
       "description": "Documentation, comments, and prose writing",
     },
 
-    // Git operations - offloaded to nano model
+    // Git operations - 9B (lightweight)
     "git": {
-      "model": "local-llm/qwen3.5-9b-q4-k-m",
+      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
       "description": "Git operations, commit messages, branch management",
     },
 
-    // Debugging - deep reasoning
+    // Debugging - 35B for deep analysis (was 9B)
     "debugging": {
-      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
+      "model": "local-llm/qwen35-moe-35b",
       "description": "Bug investigation, error analysis, root cause analysis",
     },
 
-    // Performance optimization - deep reasoning
+    // Performance optimization - 35B for complex analysis (was 9B)
     "optimization": {
-      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
+      "model": "local-llm/qwen35-moe-35b",
       "description": "Performance analysis, bottleneck identification, optimization strategies",
     },
 
-    // Code review - deep reasoning
+    // Code review - 35B for thorough analysis (was 9B)
     "code-review": {
-      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
+      "model": "local-llm/qwen35-moe-35b",
       "description": "Code review, quality analysis, best practices",
     },
 
-    // Visual/UI work - fast agent (needs coding ability)
+    // Visual/UI work - 35B for better styling logic
     "visual-engineering": {
       "model": "local-llm/qwen35-moe-35b",
       "description": "Frontend, UI/UX, design, styling, animation",
@@ -236,18 +236,18 @@
   },
 
   // ============================================================================
-  // BACKGROUND TASKS - Concurrency and request management
+  // BACKGROUND TASKS - Concurrency and request management (OPTIMIZED)
   // ============================================================================
   "background_task": {
     "providerConcurrency": {
-      // +2 to account for qwen3.5-9b-q4-k-m parallel slots
-      "local-llm": 6,
+      // 35B can handle more concurrent requests due to typical task parallelism
+      "local-llm": 8,
     },
     "modelConcurrency": {
-      "local-llm/qwen35-moe-35b": 2,
-      //"local-llm/qwen3-coder-next": 1,
-      // 4B model: run up to 4 concurrent trivial tasks
-      "wsl-llm/qwen3.5-9b-q4-k-m": 4,
+      // 35B handles complex tasks - fewer concurrent but more throughput per task
+      "local-llm/qwen35-moe-35b": 3,
+      // 9B handles trivial tasks - more concurrent for rapid-fire operations
+      "wsl-llm/qwen3.5-9b-q4-k-m": 5,
     },
   },
 
