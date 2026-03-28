@@ -1,172 +1,188 @@
 {
   "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-openagent.schema.json",
 
-  // Required top-level model for delegation to work
-  "model": "local-llm/qwen35-moe-35b",
+  // Primary model: qwen35-moe on local-llm8081 for fast execution
+  "model": "local-llm8081/qwen35-moe-35b",
 
   // ============================================================================
-  // AGENTS - Core orchestrators for different task types
+  // AGENTS - Core orchestrators with updated model strategy
   // ============================================================================
   "agents": {
-    // Main orchestrator: 35B for complex coordination
+    // Main orchestrator: qwen35-moe for fast coordination
     "sisyphus": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "local-llm8081/qwen35-moe-35b",
       "temperature": 0.6,
       "top_p": 0.95,
       "maxTokens": 32768,
       "stream": false,
-      "fallback_models": ["wsl-llm/qwen3.5-9b-q4-k-m"],
+      "fallback_models": ["local-llm8080/qwen3-coder-next"],
     },
 
-    // Architecture consultation: 35B for deep reasoning (was 9B)
+    // Architecture consultation: qwen3-coder for deep reasoning
     "oracle": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "local-llm8080/qwen3-coder-next",
       "temperature": 1.0,
       "top_p": 0.95,
       "maxTokens": 32768,
       "stream": false,
-      "fallback_models": ["wsl-llm/qwen3.5-9b-q4-k-m"],
+      "fallback_models": ["local-llm8081/qwen35-moe-35b"],
       "prompt_append": "Focus on architectural patterns, system design, and long-horizon reasoning. Consider scalability and maintainability.",
     },
 
-    // Research agent: 9B for lightweight triage/exploration
+    // Research agent: qwen35-moe for lightweight triage/exploration
     "librarian": {
-      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
+      "model": "local-llm8081/qwen35-moe-35b",
       "temperature": 0.6,
       "top_p": 0.95,
       "stream": false,
+      "fallback_models": ["local-llm8080/qwen3-coder-next"],
     },
 
-    // Exploration/investigation: 9B for speed
+    // Exploration/investigation: qwen35-moe for speed
     "explore": {
-      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
+      "model": "local-llm8081/qwen35-moe-35b",
       "temperature": 0.6,
       "top_p": 0.95,
       "stream": false,
+      "fallback_models": ["local-llm8080/qwen3-coder-next"],
     },
 
-    // Metaprogramming tasks: 35B for deep code analysis (was 9B)
+    // Metaprogramming tasks: qwen3-coder for deep code analysis
     "metis": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "local-llm8080/qwen3-coder-next",
       "temperature": 1.0,
       "stream": false,
-      "fallback_models": ["wsl-llm/qwen3.5-9b-q4-k-m"],
+      "fallback_models": ["local-llm8081/qwen35-moe-35b"],
       "prompt_append": "Provide careful analysis of code patterns, potential optimizations, and edge cases.",
     },
 
-    // Code fixing: 9B for fast, straightforward fixes
+    // Code fixing: qwen3-coder for specialized debugging
     "hephaestus": {
-      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
+      "model": "local-llm8080/qwen3-coder-next",
       "temperature": 0.6,
       "stream": false,
       "maxTokens": 16384,
+      "fallback_models": ["local-llm8081/qwen35-moe-35b"],
     },
 
-    // Prometheus inherits from sisyphus (35B for orchestration)
+    // Prometheus: qwen35-moe orchestrator with coder fallback
     "prometheus": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "local-llm8081/qwen35-moe-35b",
       "temperature": 0.6,
       "prompt_append": "Prioritize leveraging deep agents (oracle, metis) in parallel for complex analysis.",
       "stream": false,
-      "fallback_models": ["wsl-llm/qwen3.5-9b-q4-k-m"],
+      "fallback_models": ["local-llm8080/qwen3-coder-next"],
     },
 
-    // Sisyphus-Junior: 35B for task execution coordination
+    // Sisyphus-Junior: qwen35-moe for fast task execution coordination
     "sisyphus-junior": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "local-llm8081/qwen35-moe-35b",
       "temperature": 0.6,
       "top_p": 0.95,
       "maxTokens": 32768,
       "stream": false,
+      "fallback_models": ["local-llm8080/qwen3-coder-next"],
       "description": "Subagent executor for category-based task delegation",
     },
 
-    // OpenCode-Builder: 35B for complex task system execution
+    // OpenCode-Builder: qwen35-moe for fast task system execution
     "OpenCode-Builder": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "local-llm8081/qwen35-moe-35b",
       "temperature": 0.6,
       "top_p": 0.95,
       "maxTokens": 32768,
       "stream": false,
+      "fallback_models": ["local-llm8080/qwen3-coder-next"],
       "description": "Builds and executes complex tasks via the task system",
     },
 
-    // Plan agent: 35B for detailed planning (was 9B)
+    // Plan agent: qwen35-moe for fast planning
     "plan": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "local-llm8081/qwen35-moe-35b",
       "temperature": 1.0,
       "top_p": 0.95,
       "maxTokens": 32768,
       "stream": false,
+      "fallback_models": ["local-llm8080/qwen3-coder-next"],
       "description": "Generates structured work plans for multi-step tasks",
     },
 
-    // Build agent: 9B for build/test operations (fast feedback)
+    // Build agent: qwen35-moe for fast build/test operations
     "build": {
-      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
+      "model": "local-llm8081/qwen35-moe-35b",
       "temperature": 0.6,
       "top_p": 0.95,
       "maxTokens": 16384,
       "stream": false,
+      "fallback_models": ["local-llm8080/qwen3-coder-next"],
       "description": "Handles build, test, and lint operations",
     },
   },
 
   // ============================================================================
-  // CATEGORIES - Task classification with model assignment
+  // CATEGORIES - Task classification with optimized model assignment
   // ============================================================================
   "categories": {
-    // Trivial tasks - 9B for speed
+    // Trivial tasks - qwen35-moe for speed
     "quick": {
-      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
+      "model": "local-llm8081/qwen35-moe-35b",
+      "fallback_models": ["local-llm8080/qwen3-coder-next"],
       "description": "Quick fixes, minor edits, simple refactoring",
     },
 
-    // Moderate complexity - 35B for better code generation
+    // Standard code generation - qwen35-moe for speed
     "unspecified-low": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "local-llm8081/qwen35-moe-35b",
+      "fallback_models": ["local-llm8080/qwen3-coder-next"],
       "description": "Standard code generation and modifications",
     },
 
-    // High complexity - 35B for deep reasoning
+    // Complex tasks - qwen35-moe for fast response, fallback to coder if needed
     "unspecified-high": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "local-llm8081/qwen35-moe-35b",
+      "fallback_models": ["local-llm8080/qwen3-coder-next"],
       "description": "Complex refactoring, architecture decisions, multi-file changes",
     },
 
-    // Documentation and prose - 9B (fast writing)
+    // Documentation - qwen35-moe for fast writing
     "writing": {
-      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
+      "model": "local-llm8081/qwen35-moe-35b",
+      "fallback_models": ["local-llm8080/qwen3-coder-next"],
       "description": "Documentation, comments, and prose writing",
     },
 
-    // Git operations - 9B (lightweight)
+    // Git operations - qwen35-moe for lightweight operations
     "git": {
-      "model": "wsl-llm/qwen3.5-9b-q4-k-m",
+      "model": "local-llm8081/qwen35-moe-35b",
+      "fallback_models": ["local-llm8080/qwen3-coder-next"],
       "description": "Git operations, commit messages, branch management",
     },
 
-    // Debugging - 35B for deep analysis (was 9B)
+    // Debugging - qwen3-coder for specialized debugging expertise
     "debugging": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "local-llm8080/qwen3-coder-next",
+      "fallback_models": ["local-llm8081/qwen35-moe-35b"],
       "description": "Bug investigation, error analysis, root cause analysis",
     },
 
-    // Performance optimization - 35B for complex analysis (was 9B)
+    // Performance optimization - qwen3-coder for expert analysis
     "optimization": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "local-llm8080/qwen3-coder-next",
+      "fallback_models": ["local-llm8081/qwen35-moe-35b"],
       "description": "Performance analysis, bottleneck identification, optimization strategies",
     },
 
-    // Code review - 35B for thorough analysis (was 9B)
+    // Code review - qwen3-coder for thorough quality analysis
     "code-review": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "local-llm8080/qwen3-coder-next",
+      "fallback_models": ["local-llm8081/qwen35-moe-35b"],
       "description": "Code review, quality analysis, best practices",
     },
 
-    // Visual/UI work - 35B for better styling logic
+    // Visual/UI work - qwen35-moe for frontend speed
     "visual-engineering": {
-      "model": "local-llm/qwen35-moe-35b",
+      "model": "local-llm8081/qwen35-moe-35b",
+      "fallback_models": ["local-llm8080/qwen3-coder-next"],
       "description": "Frontend, UI/UX, design, styling, animation",
     },
   },
@@ -177,33 +193,46 @@
   "new_task_system_enabled": true,
 
   // ============================================================================
-  // PROVIDERS - Local LLM configuration (Strix Halo on llama.cpp)
+  // PROVIDERS - Updated local LLM configuration
   // ============================================================================
   "provider": {
-    "local-llm": {
+    // Primary provider: qwen35-moe on port 8081 (fast execution)
+    "local-llm8081": {
       "npm": "@ai-sdk/openai-compatible",
-      "name": "Strix Halo (llama.cpp)",
+      "name": "Strix Halo (llama.cpp) - Port 8081",
       "options": {
-        "baseURL": "http://minisforum.tailfe1a8c.ts.net:8080/v1",
+        "baseURL": "http://minisforum.tailfe1a8c.ts.net:8081/v1",
         "apiKey": "not-needed",
       },
       "models": {
         "qwen35-moe-35b": {
           "name": "qwen35-moe-35b",
           "cost": {
-            "input": 0,
-            "output": 0,
+            "input": 0.2,
+            "output": 0.2,
           },
           "limit": {
             "context": 262144,
             "output": 32768,
           },
         },
+      },
+    },
+
+    // Secondary provider: qwen3-coder on port 8080 (specialized debugging/fixes)
+    "local-llm8080": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Strix Halo (llama.cpp) - Port 8080",
+      "options": {
+        "baseURL": "http://minisforum.tailfe1a8c.ts.net:8080/v1",
+        "apiKey": "not-needed",
+      },
+      "models": {
         "qwen3-coder-next": {
           "name": "qwen3-coder-next",
           "cost": {
-            "input": 0,
-            "output": 0,
+            "input": 0.3,
+            "output": 0.3,
           },
           "limit": {
             "context": 262144,
@@ -212,42 +241,46 @@
         },
       },
     },
-    "wsl-llm": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "wsl-llm (llama.cpp)",
-      "options": {
-        "baseURL": "http://wsl-windows.tailfe1a8c.ts.net:8080/v1",
-        "apiKey": "not-needed",
-      },
-    },
-    "models": {
-      "qwen3.5-9b-q4-k-m": {
-        "name": "qwen3.5-9b-q4-k-m",
-        "cost": {
-          "input": 0,
-          "output": 0,
-        },
-        "limit": {
-          "context": 65536,
-          "output": 16384,
-        },
-      },
-    },
+
+    // WSL provider: DISABLED BY DEFAULT (unreliable)
+    // Uncomment and use only if WSL endpoint becomes stable
+    // "wsl-llm": {
+    //   "npm": "@ai-sdk/openai-compatible",
+    //   "name": "wsl-llm (llama.cpp) - NOT RECOMMENDED",
+    //   "options": {
+    //     "baseURL": "http://wsl-windows.tailfe1a8c.ts.net:8080/v1",
+    //     "apiKey": "not-needed",
+    //   },
+    //   "models": {
+    //     "qwen3.5-9b-q4-k-m": {
+    //       "name": "qwen3.5-9b-q4-k-m",
+    //       "cost": {
+    //         "input": 0,
+    //         "output": 0,
+    //       },
+    //       "limit": {
+    //         "context": 65536,
+    //         "output": 16384,
+    //       },
+    //     },
+    //   },
+    // },
   },
 
   // ============================================================================
-  // BACKGROUND TASKS - Concurrency and request management (OPTIMIZED)
+  // BACKGROUND TASKS - Concurrency and request management
   // ============================================================================
   "background_task": {
     "providerConcurrency": {
-      // 35B can handle more concurrent requests due to typical task parallelism
-      "local-llm": 8,
+      // Both providers can handle parallel requests
+      "local-llm8081": 8,
+      "local-llm8080": 6,
     },
     "modelConcurrency": {
-      // 35B handles complex tasks - fewer concurrent but more throughput per task
-      "local-llm/qwen35-moe-35b": 3,
-      // 9B handles trivial tasks - more concurrent for rapid-fire operations
-      "wsl-llm/qwen3.5-9b-q4-k-m": 5,
+      // qwen35-moe: fast execution, can handle more concurrent requests
+      "local-llm8081/qwen35-moe-35b": 4,
+      // qwen3-coder: specialized tasks, moderate concurrency
+      "local-llm8080/qwen3-coder-next": 3,
     },
   },
 
@@ -287,7 +320,7 @@
   "disabled_mcps": ["websearch", "grep_app"],
 
   // ============================================================================
-  // ADVANCED FEATURES
+  // ADVANCED FEATURES - Robust fallback and error handling
   // ============================================================================
   "runtime_fallback": {
     "enabled": true,
