@@ -29,13 +29,15 @@ git clone --depth 1 https://github.com/yannassoumou/opencode_config.git .tmp-ope
 **Windows PowerShell:**
 ```powershell
 git clone --depth 1 https://github.com/yannassoumou/opencode_config.git .tmp-opencode-config
-Set-Location .\tmp-opencode-config
+cd .\.tmp-opencode-config
 .\apply-config.bat
+cd ..
+Remove-Item -Recurse -Force .tmp-opencode-config
 ```
 
 Ou en une ligne avec `cmd.exe`:
 ```powershell
-cmd /c "git clone --depth 1 https://github.com/yannassoumou/opencode_config.git .tmp-opencode-config && .\tmp-opencode-config\apply-config.bat"
+cmd /c "git clone --depth 1 https://github.com/yannassoumou/opencode_config.git .tmp-opencode-config && cd .tmp-opencode-config && apply-config.bat"
 ```
 
 The script automatically cleans up `.tmp-opencode-config/` after applying the configuration.
