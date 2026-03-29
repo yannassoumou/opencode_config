@@ -21,13 +21,14 @@ bash .tmp-opencode-config/apply-config.sh
 
 Sur un nouveau projet, exécutez :
 ```powershell
-git clone --depth 1 https://github.com/yannassoumou/opencode_config.git .tmp-opencode-config ; & ".\tmp-opencode-config\apply-config.bat"
+git clone --depth 1 https://github.com/yannassoumou/opencode_config.git .tmp-opencode-config
+Set-Location .\tmp-opencode-config
+.\apply-config.bat
 ```
 
-Ou en plusieurs étapes :
+Ou en une ligne (utiliser `cmd.exe` pour `&&`):
 ```powershell
-git clone https://github.com/yannassoumou/opencode_config.git .tmp-opencode-config
-& ".\tmp-opencode-config\apply-config.bat"
+cmd /c "git clone --depth 1 https://github.com/yannassoumou/opencode_config.git .tmp-opencode-config && .\tmp-opencode-config\apply-config.bat"
 ```
 
 ## Ce que fait le script
