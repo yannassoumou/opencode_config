@@ -70,8 +70,9 @@ copy /Y "%SCRIPT_DIR%\opencode.jsonc" "%TARGET_DIR%\" >nul
 echo   ✓ opencode.jsonc
 
 REM Copier .opencode/ en entier
-if exist "%SCRIPT_DIR%\.gitignore" (
-    xcopy /E /C /I /Y /EXCLUDE:"%SCRIPT_DIR%\.gitignore" "%SCRIPT_DIR%\.opencode" "%TARGET_DIR%\.opencode\" >nul
+set "GITIGNORE_PATH=%SCRIPT_DIR%\.gitignore"
+if exist "%GITIGNORE_PATH%" (
+    xcopy /E /C /I /Y /EXCLUDE:"%GITIGNORE_PATH%" "%SCRIPT_DIR%\.opencode" "%TARGET_DIR%\.opencode\" >nul
 ) else (
     xcopy /E /C /I /Y "%SCRIPT_DIR%\.opencode" "%TARGET_DIR%\.opencode\" >nul
 )
@@ -104,12 +105,12 @@ if /i "!SCRIPT_LEAF!"==".tmp-opencode-config" (
     cd /d "%SCRIPT_PARENT_DIR%"
     
     REM Attendre un peu pour s'assurer que les fichiers ne sont plus utilisés
-    timeout /t 1 /nobreak >nul 2>&1
+    timeout /t 2 /nobreak >nul 2>&1
     
-    REM Supprimer le dossier temporaire
+    REM Supprimer le dossier temporaire (utiliser le nom relatif)
     rd /S /Q ".tmp-opencode-config" 2>nul
     if errorlevel 1 (
-        echo ℹ️  Nettoyage manuel nécessaire : rd /s /q "%SCRIPT_PARENT_DIR%\.tmp-opencode-config"
+        echo ⚠️  Nettoyage manuel nécessaire
     ) else (
         echo ✅ Dossier temporaire supprimé.
     )
