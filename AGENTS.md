@@ -22,13 +22,13 @@ To use this config on a new project:
 # Linux/macOS
 git clone --depth 1 https://github.com/yannassoumou/opencode_config.git .tmp-opencode-config
 bash .tmp-opencode-config/apply-config.sh
-rm -rf .tmp-opencode-config
 
 # Windows PowerShell
 git clone --depth 1 https://github.com/yannassoumou/opencode_config.git .tmp-opencode-config
 .\tmp-opencode-config\apply-config.bat
-rd /s /q .tmp-opencode-config
 ```
+
+The script automatically cleans up `.tmp-opencode-config/` after applying the configuration.
 
 ---
 

@@ -4,67 +4,51 @@ Dépôt de configuration OpenCode pour reproduction instantanée sur n'importe q
 
 ## Installation
 
-Sur un nouveau projet, exécutez :
-
-## Installation
-
 ### Linux / macOS
 
 Sur un nouveau projet, exécutez :
 ```bash
-git clone --depth 1 https://github.com/yannassoumou/opencode_config.git .tmp-opencode-config && bash .tmp-opencode-config/apply-config.sh && rm -rf .tmp-opencode-config
+git clone --depth 1 https://github.com/yannassoumou/opencode_config.git .tmp-opencode-config && bash .tmp-opencode-config/apply-config.sh
 ```
+
 Ou en plusieurs étapes :
 ```bash
 git clone https://github.com/yannassoumou/opencode_config.git .tmp-opencode-config
 bash .tmp-opencode-config/apply-config.sh
-rm -rf .tmp-opencode-config
 ```
 
 ### Windows
 
 Sur un nouveau projet, exécutez :
 ```powershell
-git clone --depth 1 https://github.com/yannassoumou/opencode_config.git .tmp-opencode-config && .\tmp-opencode-config\apply-config.bat && rd /s /q .tmp-opencode-config
+git clone --depth 1 https://github.com/yannassoumou/opencode_config.git .tmp-opencode-config && .\tmp-opencode-config\apply-config.bat
 ```
+
 Ou en plusieurs étapes :
 ```powershell
 git clone https://github.com/yannassoumou/opencode_config.git .tmp-opencode-config
 .\tmp-opencode-config\apply-config.bat
-rd /s /q .tmp-opencode-config
-```
-git clone --depth 1 https://github.com/yannassoumou/opencode_config.git .tmp-opencode-config && bash .tmp-opencode-config/apply-config.sh && rm -rf .tmp-opencode-config
 ```
 
-Ou en plusieurs étapes :
+## Ce que fait le script
 
-```bash
-git clone https://github.com/yannassoumou/opencode_config.git .tmp-opencode-config
-bash .tmp-opencode-config/apply-config.sh
-rm -rf .tmp-opencode-config
-```
-
-Le script :
-1. Copie `opencode.jsonc` à la racine de votre projet
-2. Copie `.opencode/` à la racine de votre projet
-3. Demande confirmation avant d'écraser des fichiers existants
-4. Supprime automatiquement le dossier temporaire après application
+1. ✅ Copie `opencode.jsonc` à la racine de votre projet
+2. ✅ Copie `.opencode/` à la racine de votre projet
+3. ✅ Copie `.qwen/` à la racine de votre projet (config Qwen Code)
+4. ⚠️  Demande confirmation avant d'écraser des fichiers existants
+5. 🗑️  Supprime automatiquement le dossier `.tmp-opencode-config/` après application
 
 ## Fichiers inclus
 
 - `opencode.jsonc` — Configuration principale OpenCode
-- `.opencode/oh-my-opencode.jsonc` — Configuration OhMyOpenCode
-- `.opencode/.gitignore` — Exclut `node_modules/` et `bun.lock`
+- `.opencode/` — Dossier de configuration OhMyOpenCode (contient `oh-my-opencode.jsonc`, `package.json`, etc.)
+- `.qwen/` — Dossier de configuration Qwen Code (contient `settings.json`)
 
 ## Configuration actuelle
 
-Modèle local : `local-llm/qwen35-moe-35b`
-- Context: 131072 tokens
-- Output: 32768 tokens
-
-Modèle fallback : `local-llm/qwen3-coder-next`
-- Context: 262144 tokens
-- Output: 32768 tokens
+- **Modèle principal** : `local-llm/qwen35-moe-35b` (262k context, 32k output)
+- **Modèle fallback** : `local-llm/qwen3-coder-next` (262k context, 32k output)
+- **Modèle triage** : `local-llm/nemotron-nano-4b` (pour tâches rapides)
 
 API locale : `http://minisforum.tailfe1a8c.ts.net:8080/v1` (ou 1201 pour oh-my-opencode)
 

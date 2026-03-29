@@ -4,29 +4,14 @@
       {
         "id": "qwen3-coder-next",
         "name": "Qwen3 Coder Next",
-        "envKey": "",
+        "envKey": "OPENAI_API_KEY",
         "baseUrl": "http://minisforum.tailfe1a8c.ts.net:8080/v1",
         "generationConfig": {
           "timeout": 300000,
           "maxRetries": 3,
           "contextWindowSize": 262144,
           "samplingParams": {
-            "temperature": 1.0,
-            "max_tokens": 32768
-          }
-        }
-      },
-      {
-        "id": "qwen35-moe-35b",
-        "name": "Qwen35 MOE 35B",
-        "envKey": "",
-        "baseUrl": "http://minisforum.tailfe1a8c.ts.net:8081/v1",
-        "generationConfig": {
-          "timeout": 300000,
-          "maxRetries": 3,
-          "contextWindowSize": 262144,
-          "samplingParams": {
-            "temperature": 0.6,
+            "temperature": 1,
             "max_tokens": 32768
           }
         }
@@ -34,7 +19,7 @@
     ]
   },
   "model": {
-    "name": "qwen35-moe-35b"
+    "name": "qwen3-coder-next"
   },
   "security": {
     "auth": {
