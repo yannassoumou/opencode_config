@@ -32,10 +32,20 @@ REM Vérifier si .opencode/ existe déjà
 if exist "%TARGET_DIR%\.opencode\" (
     echo ⚠️  .opencode/ existe déjà dans %TARGET_DIR%
     if defined OVERWRITE_NEEDED (
-        echo     Attention : les deux éléments existent déjà.
+        echo     Attention : plusieurs éléments existent déjà.
     )
     set "OVERWRITE_NEEDED=1"
     if not defined OVERWRITE_ITEM set "OVERWRITE_ITEM=.opencode/"
+)
+
+REM Vérifier si .qwen/ existe déjà
+if exist "%TARGET_DIR%\.qwen\" (
+    echo ⚠️  .qwen/ existe déjà dans %TARGET_DIR%
+    if defined OVERWRITE_NEEDED (
+        echo     Attention : plusieurs éléments existent déjà.
+    )
+    set "OVERWRITE_NEEDED=1"
+    if not defined OVERWRITE_ITEM set "OVERWRITE_ITEM=.qwen/"
 )
 
 REM Demander confirmation si nécessaire
@@ -60,6 +70,10 @@ if defined OVERWRITE_NEEDED (
     if exist "%TARGET_DIR%\.opencode\" (
         rmdir /S /Q "%TARGET_DIR%\.opencode"
         echo   ✗ .opencode/ (supprimé)
+    )
+    if exist "%TARGET_DIR%\.qwen\" (
+        rmdir /S /Q "%TARGET_DIR%\.qwen"
+        echo   ✗ .qwen/ (supprimé)
     )
 )
 
