@@ -3,14 +3,10 @@ setlocal enabledelayedexpansion
 
 REM Déterminer le répertoire du script et le répertoire cible (parent)
 set "SCRIPT_DIR=%~dp0"
-set "SCRIPT_PARENT=%~dp0.."
-
-REM Nettoyer les chemins (supprimer le \ final si présent)
 if "%SCRIPT_DIR:~-1%"=="\" set "SCRIPT_DIR=%SCRIPT_DIR:~0,-1%"
-if "%SCRIPT_PARENT:~-1%"=="\" set "SCRIPT_PARENT=%SCRIPT_PARENT:~0,-1%"
 
-REM Aller dans le dossier parent pour obtenir le chemin absolu
-pushd "%SCRIPT_PARENT%" >nul 2>&1
+REM Le dossier parent (projet cible) est le parent du dossier du script
+pushd "%SCRIPT_DIR%\.." >nul 2>&1
 if errorlevel 1 (
     echo ❌ Impossible de déterminer le dossier parent de %SCRIPT_DIR%
     exit /b 1
@@ -100,15 +96,15 @@ cd /d "%TARGET_DIR%"
 
 REM Vérifier si on est dans un dossier .tmp-opencode-config
 for %%I in ("%SCRIPT_DIR%") do set "SCRIPT_LEAF=%%~nxI"
-set "SCRIPT_GRANDPARENT=%SCRIPT_DIR%"
 
-REM Retirer le dernier composant pour obtenir le grand-parent
-for %%P in ("%SCRIPT_GRANDPARENT%") do set "SCRIPT_PARENT_DIR=%%~dpP"
-if "!SCRIPT_PARENT_DIR:~-1!"=="\" set "SCRIPT_PARENT_DIR=!SCRIPT_PARENT_DIR:~0,-1!"
+REM Obtenir le chemin absolu du parent pour le nettoyage
+pushd "%SCRIPT_DIR%\.." >nul 2>&1
+set "SCRIPT_PARENT_DIR=%CD%"
+popd >nul 2>&1
 
 if /i "!SCRIPT_LEAF!"==".tmp-opencode-config" (
     REM On est dans .tmp-opencode-config, supprimer le dossier parent
-    rd /S /Q "!SCRIPT_PARENT_DIR!"
+    rd /S /Q "%SCRIPT_PARENT_DIR%"
     echo ✅ Dossier temporaire supprimé.
 ) else (
     echo ℹ️  Le script n'est pas dans un dossier .tmp-opencode-config
