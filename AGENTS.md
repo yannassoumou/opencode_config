@@ -4,7 +4,9 @@ This repository provides instant reproduction of OpenCode configuration across a
 
 ## Purpose
 
-Template repository that copies `opencode.jsonc` and `.opencode/` to target projects via `apply-config.sh` (Linux/macOS) or `apply-config.bat` (Windows).
+Template repository that copies `opencode.jsonc`, `.opencode/`, and `.qwen/` to target projects via:
+- `apply-config.sh` (Linux/macOS)
+- `apply-config.bat` (Windows PowerShell)
 
 ---
 
@@ -18,14 +20,15 @@ Template repository that copies `opencode.jsonc` and `.opencode/` to target proj
 - **No TypeScript** configuration present
 
 To use this config on a new project:
-```bash
-# Linux/macOS
-git clone --depth 1 https://github.com/yannassoumou/opencode_config.git .tmp-opencode-config
-bash .tmp-opencode-config/apply-config.sh
 
-# Windows PowerShell
-git clone --depth 1 https://github.com/yannassoumou/opencode_config.git .tmp-opencode-config
-.\tmp-opencode-config\apply-config.bat
+**Linux/macOS:**
+```bash
+git clone --depth 1 https://github.com/yannassoumou/opencode_config.git .tmp-opencode-config && bash .tmp-opencode-config/apply-config.sh
+```
+
+**Windows PowerShell:**
+```powershell
+git clone --depth 1 https://github.com/yannassoumou/opencode_config.git .tmp-opencode-config ; .\tmp-opencode-config\apply-config.bat
 ```
 
 The script automatically cleans up `.tmp-opencode-config/` after applying the configuration.

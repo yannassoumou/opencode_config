@@ -17,11 +17,11 @@ git clone https://github.com/yannassoumou/opencode_config.git .tmp-opencode-conf
 bash .tmp-opencode-config/apply-config.sh
 ```
 
-### Windows
+### Windows (PowerShell)
 
 Sur un nouveau projet, exécutez :
 ```powershell
-git clone --depth 1 https://github.com/yannassoumou/opencode_config.git .tmp-opencode-config && .\tmp-opencode-config\apply-config.bat
+git clone --depth 1 https://github.com/yannassoumou/opencode_config.git .tmp-opencode-config ; .\tmp-opencode-config\apply-config.bat
 ```
 
 Ou en plusieurs étapes :
