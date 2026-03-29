@@ -66,14 +66,14 @@ if defined OVERWRITE_NEEDED (
 echo 📦 Copie des fichiers...
 
 REM Copier opencode.jsonc à la racine du projet
-copy /Y "%SCRIPT_DIR%opencode.jsonc" "%TARGET_DIR%\" >nul
+copy /Y "%SCRIPT_DIR%\opencode.jsonc" "%TARGET_DIR%\" >nul
 echo   ✓ opencode.jsonc
 
 REM Copier .opencode/ en entier
-xcopy /E /C /I /Y /EXCLUDE:"%SCRIPT_DIR%.gitignore" "%SCRIPT_DIR%.opencode" "%TARGET_DIR%\.opencode\" >nul
-if errorlevel 1 (
-    REM Si .gitignore n'existe pas, copier sans exclure
-    xcopy /E /C /I /Y "%SCRIPT_DIR%.opencode" "%TARGET_DIR%\.opencode\" >nul
+if exist "%SCRIPT_DIR%\.gitignore" (
+    xcopy /E /C /I /Y /EXCLUDE:"%SCRIPT_DIR%\.gitignore" "%SCRIPT_DIR%\.opencode" "%TARGET_DIR%\.opencode\" >nul
+) else (
+    xcopy /E /C /I /Y "%SCRIPT_DIR%\.opencode" "%TARGET_DIR%\.opencode\" >nul
 )
 echo   ✓ .opencode/
 
@@ -81,7 +81,7 @@ REM Copier .qwen/ en entier (config Qwen Code)
 if exist "%TARGET_DIR%\.qwen\" (
     rmdir /S /Q "%TARGET_DIR%\.qwen"
 )
-xcopy /E /C /I /Y "%SCRIPT_DIR%.qwen" "%TARGET_DIR%\.qwen\" >nul
+xcopy /E /C /I /Y "%SCRIPT_DIR%\.qwen" "%TARGET_DIR%\.qwen\" >nul
 echo   ✓ .qwen/
 
 echo.
@@ -91,21 +91,28 @@ echo.
 REM Nettoyage du dossier temporaire
 echo 🗑️  Nettoyage du dossier temporaire...
 
-REM Se placer dans le dossier cible pour éviter les problèmes de répertoire courant
-cd /d "%TARGET_DIR%"
-
 REM Vérifier si on est dans un dossier .tmp-opencode-config
 for %%I in ("%SCRIPT_DIR%") do set "SCRIPT_LEAF=%%~nxI"
 
-REM Obtenir le chemin absolu du parent pour le nettoyage
-pushd "%SCRIPT_DIR%\.." >nul 2>&1
-set "SCRIPT_PARENT_DIR=%CD%"
-popd >nul 2>&1
-
 if /i "!SCRIPT_LEAF!"==".tmp-opencode-config" (
-    REM On est dans .tmp-opencode-config, supprimer le dossier parent
-    rd /S /Q "%SCRIPT_PARENT_DIR%"
-    echo ✅ Dossier temporaire supprimé.
+    REM Obtenir le chemin absolu du parent pour le nettoyage
+    pushd "%SCRIPT_DIR%\.." >nul 2>&1
+    set "SCRIPT_PARENT_DIR=%CD%"
+    popd >nul 2>&1
+    
+    REM Changer de répertoire vers le parent avant de supprimer
+    cd /d "%SCRIPT_PARENT_DIR%"
+    
+    REM Attendre un peu pour s'assurer que les fichiers ne sont plus utilisés
+    timeout /t 1 /nobreak >nul 2>&1
+    
+    REM Supprimer le dossier temporaire
+    rd /S /Q ".tmp-opencode-config" 2>nul
+    if errorlevel 1 (
+        echo ℹ️  Nettoyage manuel nécessaire : rd /s /q "%SCRIPT_PARENT_DIR%\.tmp-opencode-config"
+    ) else (
+        echo ✅ Dossier temporaire supprimé.
+    )
 ) else (
     echo ℹ️  Le script n'est pas dans un dossier .tmp-opencode-config
     echo    Supprimez manuellement le dossier d'installation si nécessaire.
