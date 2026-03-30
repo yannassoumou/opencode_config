@@ -1,20 +1,27 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "local-llm8080/qwen3-coder-next",
+
+  // Primary model: Qwen3.5-MOE on port 8080 for most tasks
+  "model": "local-llm8080/qwen35-moe-35b",
+
+  // ============================================================================
+  // PROVIDERS - Dual local endpoints
+  // ============================================================================
   "provider": {
+    // Port 8080: Qwen3.5-35B-A3B (MOE) - Primary general-purpose model
     "local-llm8080": {
       "npm": "@ai-sdk/openai-compatible",
-      "name": "Strix Halo (llama.cpp)",
+      "name": "Minisforum Port 8080 - Qwen3.5-MOE-35B",
       "options": {
         "baseURL": "http://minisforum.tailfe1a8c.ts.net:8080/v1",
         "apiKey": "not-needed",
       },
       "models": {
-        "qwen3-coder-next": {
-          "name": "qwen3-coder-next",
+        "qwen35-moe-35b": {
+          "name": "qwen35-moe-35b",
           "cost": {
-            "input": 0.3,
-            "output": 0.3,
+            "input": 0,
+            "output": 0,
           },
           "limit": {
             "context": 262144,
@@ -23,11 +30,36 @@
         },
       },
     },
+
+    // Port 8081: Qwen3-Coder-Next (Q6_K_XL) - Specialized for coding
+    "local-llm8081": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Minisforum Port 8081 - Qwen3-Coder-Next (Q6_K_XL)",
+      "options": {
+        "baseURL": "http://minisforum.tailfe1a8c.ts.net:8081/v1",
+        "apiKey": "not-needed",
+      },
+      "models": {
+        "qwen3-coder-next": {
+          "name": "qwen3-coder-next",
+          "cost": {
+            "input": 0,
+            "output": 0,
+          },
+          "limit": {
+            "context": 262144,
+            "output": 32768,
+          },
+        },
+      },
+    },
+
+    // WSL host llama.cpp (fallback option)
     "wsl-llm": {
       "npm": "@ai-sdk/openai-compatible",
-      "name": "wsl-llm (llama.cpp)",
+      "name": "WSL-Windows llama.cpp (fallback)",
       "options": {
-        "baseURL": "http://wsl-windows.tailfe1a8c.ts.net:8080/v1",
+        "baseURL": "http://station.tailfe1a8c.ts.net:8080/v1",
         "apiKey": "not-needed",
       },
       "models": {
@@ -44,13 +76,15 @@
         },
       },
     },
-
-    // WSL host llama.cpp (same stack as browser UI at wsl-windows:8080 — API is /v1, not #/chat/...)
   },
+  // ============================================================================
+  // ADVANCED SETTINGS
+  // ============================================================================
   "compaction": {
     "auto": true,
     "prune": true,
     "reserved": 16384,
   },
+
   "plugin": ["oh-my-opencode@latest"],
 }
