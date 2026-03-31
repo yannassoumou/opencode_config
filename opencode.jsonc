@@ -36,7 +36,7 @@
       "npm": "@ai-sdk/openai-compatible",
       "name": "Minisforum Port 8081 - Qwen3-Coder-Next (Q6_K_XL)",
       "options": {
-        "baseURL": "http://minisforum.tailfe1a8c.ts.net:8081/v1",
+        "baseURL": "http://minisforum.tailfe1a8c.ts.net:8080/v1",
         "apiKey": "not-needed",
       },
       "models": {

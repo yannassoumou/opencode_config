@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/oh-my-openagent.schema.json",
 
   // Primary model: Qwen3.5-MOE on local-llm8080 for orchestration and reasoning
-  "model": "local-llm8080/qwen35-moe-35b",
+  "model": "local-llm8081/qwen3-coder-next",
 
   // ============================================================================
   // AGENTS - Strategically distributed across dual endpoints
@@ -10,7 +10,7 @@
   "agents": {
     // Main orchestrator - needs strong reasoning, use MOE
     "sisyphus": {
-      "model": "local-llm8080/qwen35-moe-35b",
+      "model": "local-llm8081/qwen3-coder-next",
       "temperature": 0.6,
       "top_p": 0.95,
       "maxTokens": 32768,
@@ -19,7 +19,7 @@
 
     // Architecture consultation - needs reasoning, use MOE
     "oracle": {
-      "model": "local-llm8080/qwen35-moe-35b",
+      "model": "local-llm8081/qwen3-coder-next",
       "temperature": 1.0,
       "top_p": 0.95,
       "maxTokens": 32768,
@@ -29,7 +29,7 @@
 
     // Research agent - benefits from MOE's broader knowledge
     "librarian": {
-      "model": "local-llm8080/qwen35-moe-35b",
+      "model": "local-llm8081/qwen3-coder-next",
       "temperature": 0.6,
       "top_p": 0.95,
       "stream": false,
@@ -63,7 +63,7 @@
 
     // Prometheus - meta-coordinator, use MOE for orchestration
     "prometheus": {
-      "model": "local-llm8080/qwen35-moe-35b",
+      "model": "local-llm8081/qwen3-coder-next",
       "temperature": 0.6,
       "prompt_append": "Prioritize leveraging deep agents (oracle, metis) in parallel for complex analysis.",
       "stream": false,
@@ -71,7 +71,7 @@
 
     // Sisyphus-Junior - task delegator, use MOE for routing decisions
     "sisyphus-junior": {
-      "model": "local-llm8080/qwen35-moe-35b",
+      "model": "local-llm8081/qwen3-coder-next",
       "temperature": 0.6,
       "top_p": 0.95,
       "maxTokens": 32768,
@@ -91,7 +91,7 @@
 
     // Plan agent - needs reasoning for planning, use MOE
     "plan": {
-      "model": "local-llm8080/qwen35-moe-35b",
+      "model": "local-llm8081/qwen3-coder-next",
       "temperature": 1.0,
       "top_p": 0.95,
       "maxTokens": 32768,
@@ -125,12 +125,12 @@
     },
 
     "unspecified-high": {
-      "model": "local-llm8080/qwen35-moe-35b",
+      "model": "local-llm8081/qwen3-coder-next",
       "description": "Complex refactoring, architecture decisions, multi-file changes",
     },
 
     "writing": {
-      "model": "local-llm8080/qwen35-moe-35b",
+      "model": "local-llm8081/qwen3-coder-next",
       "description": "Documentation, comments, and prose writing",
     },
 
@@ -155,7 +155,7 @@
     },
 
     "visual-engineering": {
-      "model": "local-llm8080/qwen35-moe-35b",
+      "model": "local-llm8081/qwen3-coder-next",
       "description": "Frontend, UI/UX, design, styling, animation",
     },
   },
@@ -197,7 +197,7 @@
       "npm": "@ai-sdk/openai-compatible",
       "name": "Minisforum Port 8081 - Qwen3-Coder-Next (Q6_K_XL)",
       "options": {
-        "baseURL": "http://minisforum.tailfe1a8c.ts.net:8081/v1",
+        "baseURL": "http://minisforum.tailfe1a8c.ts.net:8080/v1",
         "apiKey": "not-needed",
       },
       "models": {
@@ -244,14 +244,12 @@
   // ============================================================================
   "background_task": {
     "providerConcurrency": {
-      "local-llm8080": 6,
-      "local-llm8081": 6,
+      "local-llm8080": 1,
       "wsl-llm": 4,
     },
     "modelConcurrency": {
-      "local-llm8080/qwen35-moe-35b": 4,
-      "local-llm8081/qwen3-coder-next": 4,
-      "wsl-llm/qwen35-9b-q4-k-m": 2,
+      "local-llm8081/qwen3-coder-next": 1,
+      "wsl-llm/qwen35-9b-q4-k-m": 4,
     },
   },
 
@@ -288,7 +286,7 @@
     "force_enable": true,
   },
 
-  "disabled_mcps": ["websearch", "grep_app"],
+  //"disabled_mcps": ["websearch", "grep_app"],
 
   // ============================================================================
   // ADVANCED FEATURES - Robust fallback and error handling
