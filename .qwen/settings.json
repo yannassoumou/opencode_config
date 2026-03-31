@@ -21,7 +21,7 @@
         "id": "qwen3-coder-next",
         "name": "Qwen3 Coder Next (Specialized)",
         "envKey": "OPENAI_API_KEY",
-        "baseUrl": "http://minisforum.tailfe1a8c.ts.net:8081/v1",
+        "baseUrl": "http://minisforum.tailfe1a8c.ts.net:8080/v1",
         "generationConfig": {
           "timeout": 300000,
           "maxRetries": 3,
