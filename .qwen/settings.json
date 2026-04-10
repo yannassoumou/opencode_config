@@ -5,7 +5,7 @@
         "id": "qwen35-moe-35b",
         "name": "Qwen3.5 MOE 35B (Reasoning)",
         "envKey": "OPENAI_API_KEY",
-        "baseUrl": "http://minisforum.tailfe1a8c.ts.net:8080/v1",
+        "baseUrl": "http://minisforum.tailfe1a8c.ts.net:8081/v1",
         "generationConfig": {
           "timeout": 300000,
           "maxRetries": 3,
@@ -37,7 +37,7 @@
         "id": "qwen35-9b-q4-k-m",
         "name": "Qwen3.5 9B Q4 (Lightweight/Fast)",
         "envKey": "OPENAI_API_KEY",
-        "baseUrl": "http://station.tailfe1a8c.ts.net:8080/v1",
+        "baseUrl": "http://wsl-windows.tailfe1a8c.ts.net:8080/v1",
         "generationConfig": {
           "timeout": 180000,
           "maxRetries": 2,
