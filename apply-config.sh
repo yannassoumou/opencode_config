@@ -5,6 +5,28 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TARGET_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
+# Temp folder cleanup:
+# Typical usage is running this script from a clone directory named `.tmp-opencode-config/`.
+# This script uses `set -e`, so any early `exit`/failure can skip the manual cleanup block.
+# We ensure cleanup always runs on exit via a trap.
+TMP_INSTALL_DIR=""
+if [[ "$(basename "$SCRIPT_DIR")" == ".tmp-opencode-config" ]]; then
+    TMP_INSTALL_DIR="$SCRIPT_DIR"
+fi
+
+cleanup() {
+    # Only remove the temp clone folder when it matches the expected name.
+    if [[ -n "$TMP_INSTALL_DIR" && -d "$TMP_INSTALL_DIR" ]]; then
+        # Avoid deleting the directory we're currently in.
+        if [[ -n "${TARGET_DIR:-}" && "$TARGET_DIR" != "$TMP_INSTALL_DIR" ]]; then
+            cd "$TARGET_DIR" 2>/dev/null || true
+        fi
+        rm -rf -- "$TMP_INSTALL_DIR" 2>/dev/null || true
+    fi
+}
+
+trap cleanup EXIT INT TERM
+
 echo "🔧 Applying OpenCode configuration to: $TARGET_DIR"
 echo ""
 
@@ -58,23 +80,6 @@ echo "  ✓ .qwen/"
 echo ""
 echo "✅ OpenCode configuration appliquée avec succès !"
 echo ""
-
-# Nettoyage du dossier temporaire
-echo "🗑️  Nettoyage du dossier temporaire..."
-
-# Détecter si on est dans un dossier temporaire
-SCRIPT_PARENT="$(dirname "$SCRIPT_DIR")"
-SCRIPT_BASENAME="$(basename "$SCRIPT_DIR")"
-
-if [ "$SCRIPT_BASENAME" = ".tmp-opencode-config" ]; then
-    # On est dans un dossier temporaire, on peut supprimer le parent
-    cd "$TARGET_DIR"
-    rm -rf "$SCRIPT_PARENT/.tmp-opencode-config"
-    echo "✅ Dossier temporaire supprimé."
-else
-    echo "ℹ️  Le script n'est pas dans un dossier .tmp-opencode-config"
-    echo "   Supprimez manuellement le dossier d'installation si nécessaire."
-fi
 
 echo ""
 echo "🎉 Prêt ! Votre OpenCode config est maintenant configuré."
